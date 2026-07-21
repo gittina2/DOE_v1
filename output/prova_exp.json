@@ -1,0 +1,52 @@
+{
+    "schema_version": "1.0",
+    "step": "experiment_created",
+    "audit": {
+        "action": "create_experiment",
+        "experiment_id": "7f13eb1f-c209-4750-87e9-046d5b5cc597",
+        "experiment_name": "fullfact1"
+    },
+    "experiment": {
+        "schema_version": "1.0",
+        "experiment_id": "7f13eb1f-c209-4750-87e9-046d5b5cc597",
+        "name": "fullfact1",
+        "description": null,
+        "factors": [
+            {
+                "schema_version": "1.0",
+                "name": "T",
+                "type": "continuous",
+                "unit": "C",
+                "levels": null,
+                "lower_bound": 20.0,
+                "upper_bound": 60.0,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "name": "conc_base",
+                "type": "continuous",
+                "unit": null,
+                "levels": null,
+                "lower_bound": 1.0,
+                "upper_bound": 2.0,
+                "metadata": null
+            }
+        ],
+        "responses": [
+            {
+                "schema_version": "1.0",
+                "name": "resa",
+                "type": "continuous",
+                "unit": null,
+                "metadata": null
+            }
+        ],
+        "design_type": "full_factorial",
+        "planned_runs": null,
+        "metadata": null
+    },
+    "design": null,
+    "results": null,
+    "analysis": null
+}

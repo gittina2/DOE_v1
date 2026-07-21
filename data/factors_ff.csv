@@ -1,0 +1,3 @@
+name,type,unit,levels,lower_bound,upper_bound
+T,continuous,C,,20,60
+conc_base,continuous,,,1,2
