@@ -84,3 +84,47 @@ def test_persistence_invalid_state_on_load(tmp_path):
         
     with pytest.raises(WorkflowStateMismatchError, match="no entities can be defined"):
         WorkflowState.load_from_json(str(file_path))
+
+
+def test_persistence_results_roundtrip(tmp_path):
+    from doe.models.design import Design, Run
+    from doe.models.results import ResultEntry, Results
+
+    f = Factor(name="temp", type="continuous", lower_bound=0.0, upper_bound=100.0)
+    r = Response(name="yield", type="continuous")
+    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r], design_type="full_factorial")
+    design = Design(
+        design_id="des_001",
+        design_type="full_factorial",
+        experiment_ref=exp.experiment_id,
+        runs=[
+            Run(run_id="run_001", factor_values={"temp": 0.0}),
+            Run(run_id="run_002", factor_values={"temp": 100.0}),
+        ],
+    )
+    res_entry1 = ResultEntry(run_ref="run_001", values={"yield": 94.2}, status="complete")
+    res_entry2 = ResultEntry(run_ref="run_002", values={"yield": 96.8}, status="complete")
+    results = Results(design_ref=design.design_id, entries=[res_entry1, res_entry2], completeness="complete")
+
+
+    ws = WorkflowState(
+        step="results_complete",
+        experiment=exp,
+        design=design,
+        results=results,
+        audit={"step": "results_complete"},
+    )
+
+    file_path = tmp_path / "workflow_results.json"
+    ws.save_to_json(str(file_path))
+
+    ws_loaded = WorkflowState.load_from_json(str(file_path))
+    assert ws_loaded == ws
+    assert ws_loaded.step == "results_complete"
+    assert ws_loaded.results is not None
+    assert ws_loaded.results.completeness == "complete"
+    assert len(ws_loaded.results.entries) == 2
+    assert ws_loaded.results.entries[0].run_ref == "run_001"
+    assert ws_loaded.results.entries[0].values == {"yield": 94.2}
+
+
