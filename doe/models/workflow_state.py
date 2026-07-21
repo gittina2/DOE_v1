@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import Any, Literal, Optional, Dict
 from doe.models.design import Design
 from doe.models.experiment import Experiment
+from doe.models.results import Results
 from doe.models.exceptions import WorkflowStateMismatchError, SchemaVersionMismatchError
 
 
@@ -21,7 +22,7 @@ class WorkflowState:
     audit: Dict[str, Any] = field(default_factory=dict)
     experiment: Optional[Experiment] = None
     design: Optional[Design] = None
-    results: Optional[Any] = None
+    results: Optional[Results] = None
     analysis: Optional[Any] = None
     schema_version: str = "1.0"
 
@@ -75,6 +76,7 @@ class WorkflowState:
                     "For step 'design_generated', results and analysis must be None."
                 )
             self.experiment.validate()
+            self.design.validate(self.experiment)
             
         elif self.step in ("results_in_progress", "results_complete"):
             if self.experiment is None or self.design is None or self.results is None:
@@ -86,6 +88,9 @@ class WorkflowState:
                     f"For step '{self.step}', analysis must be None."
                 )
             self.experiment.validate()
+            self.design.validate(self.experiment)
+            if hasattr(self.results, "validate"):
+                self.results.validate()
             
         elif self.step == "analysis_created":
             if (
@@ -96,6 +101,10 @@ class WorkflowState:
             ):
                 raise WorkflowStateMismatchError("For step 'analysis_created', all entities must be defined.")
             self.experiment.validate()
+            self.design.validate(self.experiment)
+            if hasattr(self.results, "validate"):
+                self.results.validate()
+
             
         elif self.step == "report_generated":
             if self.experiment is None:
@@ -123,13 +132,16 @@ class WorkflowState:
         design_data = data.get("design")
         design = Design.from_dict(design_data) if design_data is not None else None
 
+        results_data = data.get("results")
+        results = Results.from_dict(results_data) if isinstance(results_data, dict) else results_data
+
         return cls(
             schema_version=data.get("schema_version", "1.0"),
             step=data.get("step", "empty"),
             audit=data.get("audit", {}),
             experiment=experiment,
             design=design,
-            results=data.get("results"),
+            results=results,
             analysis=data.get("analysis"),
         )
 
@@ -154,16 +166,16 @@ class WorkflowState:
         state.validate()
         return state
 
-    def transition_to(self, new_step: WorkflowStep, **kwargs) -> None:
+    def transition_to(self, new_step: WorkflowStep, **kwargs) -> "WorkflowState":
         
         self.validate()
 
         allowed_transitions = {
             "empty": ["experiment_created"],
             "experiment_created": ["design_generated"],
-            "design_generated": ["results_in_progress"],
-            "results_in_progress" : ["results_complete"],
-            "results_complete": ["analysis_created"],
+            "design_generated": ["results_in_progress", "results_complete"],
+            "results_in_progress": ["results_in_progress", "results_complete"],
+            "results_complete": ["results_in_progress", "results_complete", "analysis_created"],
             "analysis_created": ["report_generated"],
             "report_generated": []
         }
@@ -173,7 +185,7 @@ class WorkflowState:
                 f"Invalid transition from {self.step} to {new_step}."
             )
 
-        new_state=WorkflowState(
+        new_state = WorkflowState(
             step=new_step,
             audit={
                 **self.audit,
