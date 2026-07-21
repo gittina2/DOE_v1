@@ -3,14 +3,14 @@
     "step": "design_generated",
     "audit": {
         "action": "generate_design",
-        "experiment_id": "7f13eb1f-c209-4750-87e9-046d5b5cc597",
+        "experiment_id": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
         "experiment_name": "fullfact1",
-        "design_id": "687babb3-16c1-4b2a-92a6-53e49cf8003f",
+        "design_id": "980b413b-5793-4074-9803-73536a67f759",
         "design_type": "full_factorial"
     },
     "experiment": {
         "schema_version": "1.0",
-        "experiment_id": "7f13eb1f-c209-4750-87e9-046d5b5cc597",
+        "experiment_id": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
         "name": "fullfact1",
         "description": null,
         "factors": [
@@ -50,13 +50,14 @@
     },
     "design": {
         "schema_version": "1.0",
-        "design_id": "687babb3-16c1-4b2a-92a6-53e49cf8003f",
+        "design_id": "980b413b-5793-4074-9803-73536a67f759",
         "design_type": "full_factorial",
-        "experiment_ref": "7f13eb1f-c209-4750-87e9-046d5b5cc597",
+        "experiment_ref": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
         "runs": [
             {
                 "schema_version": "1.0",
-                "run_id": "784e2a37-11f7-4e15-8290-f85b106387d5",
+                "run_id": "d3a46762-ca01-48bc-9250-cc8b5b8577cd",
+                "run_number": 1,
                 "factor_values": {
                     "T": 20.0,
                     "conc_base": 1.0
@@ -65,7 +66,8 @@
             },
             {
                 "schema_version": "1.0",
-                "run_id": "13a662c3-4b4a-4a59-b492-586970e99c14",
+                "run_id": "dbb61fe3-9497-4dba-8332-38568a9d0892",
+                "run_number": 2,
                 "factor_values": {
                     "T": 20.0,
                     "conc_base": 2.0
@@ -74,7 +76,8 @@
             },
             {
                 "schema_version": "1.0",
-                "run_id": "7508e819-d9f6-4f92-a4ca-e906bc7f7082",
+                "run_id": "5e81c244-aef7-4af9-82df-917cd68f28a6",
+                "run_number": 3,
                 "factor_values": {
                     "T": 60.0,
                     "conc_base": 1.0
@@ -83,7 +86,8 @@
             },
             {
                 "schema_version": "1.0",
-                "run_id": "c4143fd2-6d52-412a-8c3c-9fcd61a3dd30",
+                "run_id": "3c15e7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "run_number": 4,
                 "factor_values": {
                     "T": 60.0,
                     "conc_base": 2.0

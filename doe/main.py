@@ -5,7 +5,7 @@ from doe.design_generation import generate_design
 from doe.result_input import insert_results
 from doe.imports import parse_factors_csv, map_rows_to_factors, import_results_from_csv
 from doe.experiment_creation import create_experiment
-from doe.models import Response, DoeError
+from doe.models import Response, DoeError, design
 from doe.models.workflow_state import WorkflowState
 
 def parse_response_arg(resp_str: str) -> Response:
@@ -89,6 +89,7 @@ def handle_insert_results(args) -> int:
     try:
         workflow_state = WorkflowState.load_from_json(args.input)
         responses = workflow_state.experiment.responses if workflow_state.experiment else None
+        
         result_entries = import_results_from_csv(args.csv, design=workflow_state.design, responses=responses)
 
         new_state = insert_results(workflow_state, result_entries)
