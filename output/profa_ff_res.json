@@ -1,0 +1,144 @@
+{
+    "schema_version": "1.0",
+    "step": "results_complete",
+    "audit": {
+        "action": "generate_design",
+        "experiment_id": "7f13eb1f-c209-4750-87e9-046d5b5cc597",
+        "experiment_name": "fullfact1",
+        "design_id": "687babb3-16c1-4b2a-92a6-53e49cf8003f",
+        "design_type": "full_factorial",
+        "inserted_results_count": 4,
+        "total_results_count": 4,
+        "transition": "design_generated -> results_complete"
+    },
+    "experiment": {
+        "schema_version": "1.0",
+        "experiment_id": "7f13eb1f-c209-4750-87e9-046d5b5cc597",
+        "name": "fullfact1",
+        "description": null,
+        "factors": [
+            {
+                "schema_version": "1.0",
+                "name": "T",
+                "type": "continuous",
+                "unit": "C",
+                "levels": null,
+                "lower_bound": 20.0,
+                "upper_bound": 60.0,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "name": "conc_base",
+                "type": "continuous",
+                "unit": null,
+                "levels": null,
+                "lower_bound": 1.0,
+                "upper_bound": 2.0,
+                "metadata": null
+            }
+        ],
+        "responses": [
+            {
+                "schema_version": "1.0",
+                "name": "resa",
+                "type": "continuous",
+                "unit": null,
+                "metadata": null
+            }
+        ],
+        "design_type": "full_factorial",
+        "planned_runs": null,
+        "metadata": null
+    },
+    "design": {
+        "schema_version": "1.0",
+        "design_id": "687babb3-16c1-4b2a-92a6-53e49cf8003f",
+        "design_type": "full_factorial",
+        "experiment_ref": "7f13eb1f-c209-4750-87e9-046d5b5cc597",
+        "runs": [
+            {
+                "schema_version": "1.0",
+                "run_id": "784e2a37-11f7-4e15-8290-f85b106387d5",
+                "factor_values": {
+                    "T": 20.0,
+                    "conc_base": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "13a662c3-4b4a-4a59-b492-586970e99c14",
+                "factor_values": {
+                    "T": 20.0,
+                    "conc_base": 2.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "7508e819-d9f6-4f92-a4ca-e906bc7f7082",
+                "factor_values": {
+                    "T": 60.0,
+                    "conc_base": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "c4143fd2-6d52-412a-8c3c-9fcd61a3dd30",
+                "factor_values": {
+                    "T": 60.0,
+                    "conc_base": 2.0
+                },
+                "metadata": null
+            }
+        ],
+        "blocks": [],
+        "randomization": false,
+        "order": null,
+        "metadata": null
+    },
+    "results": {
+        "schema_version": "1.0",
+        "results_id": "res_03de9467",
+        "design_ref": "687babb3-16c1-4b2a-92a6-53e49cf8003f",
+        "entries": [
+            {
+                "run_ref": "784e2a37-11f7-4e15-8290-f85b106387d5",
+                "values": {
+                    "resa": 10
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "13a662c3-4b4a-4a59-b492-586970e99c14",
+                "values": {
+                    "resa": 2
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "7508e819-d9f6-4f92-a4ca-e906bc7f7082",
+                "values": {
+                    "resa": 5
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "c4143fd2-6d52-412a-8c3c-9fcd61a3dd30",
+                "values": {
+                    "resa": 3
+                },
+                "status": "complete",
+                "metadata": null
+            }
+        ],
+        "completeness": "complete",
+        "metadata": null
+    },
+    "analysis": null
+}

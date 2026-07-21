@@ -43,6 +43,7 @@ def insert_results(
         raise WorkflowStateMismatchError("WorkflowState must contain valid experiment and design.")
 
     design_run_ids = {run.run_id for run in state.design.runs}
+    run_num_to_id = {str(run.run_number): run.run_id for run in state.design.runs if run.run_number is not None}
     experiment_response_names = {r.name for r in state.experiment.responses}
 
     # Validate input entries
@@ -51,6 +52,10 @@ def insert_results(
         if not isinstance(entry, ResultEntry):
             raise InvalidResponseValueError("All entries must be ResultEntry instances.")
         entry.validate()
+
+        # If run_ref matches run_number, resolve to technical run_id
+        if entry.run_ref not in design_run_ids and str(entry.run_ref) in run_num_to_id:
+            entry.run_ref = run_num_to_id[str(entry.run_ref)]
 
         if entry.run_ref not in design_run_ids:
             raise UnknownRunIdError(
@@ -102,16 +107,20 @@ def insert_results(
     completeness = "complete" if is_complete else "partial"
     target_step = "results_complete" if is_complete else "results_in_progress"
 
-    results_obj = Results(
-        design_ref=state.design.design_id,
-        entries=all_entries,
-        completeness=completeness,
-        results_id=state.results.results_id if state.results is not None and hasattr(state.results, "results_id") else undefined,
-    ) if state.results is not None and hasattr(state.results, "results_id") else Results(
-        design_ref=state.design.design_id,
-        entries=all_entries,
-        completeness=completeness,
-    )
+    if state.results is not None and getattr(state.results, "results_id", None):
+        results_obj = Results(
+            results_id=state.results.results_id,
+            design_ref=state.design.design_id,
+            entries=all_entries,
+            completeness=completeness,
+        )
+    else:
+        results_obj = Results(
+            design_ref=state.design.design_id,
+            entries=all_entries,
+            completeness=completeness,
+        )
+
 
     results_obj.validate()
 

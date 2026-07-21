@@ -87,8 +87,9 @@ def combinations_to_runs(
     runs: List[Run] = []
     run_ids = set()
 
-    for combo in combinations:      
+    for idx, combo in enumerate(combinations, start=1):      
         run = Run(
+            run_number=idx,
             factor_values=combo
         )
 
@@ -104,6 +105,7 @@ def combinations_to_runs(
         run.validate(experiment)
 
         runs.append(run)
+
 
     if len({r.run_id for r in runs}) != len(runs):
         raise DuplicateRunIdError(

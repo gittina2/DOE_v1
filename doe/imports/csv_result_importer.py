@@ -40,14 +40,14 @@ def import_results_from_csv(
     header_clean = [col.strip() for col in header]
 
     run_ref_col_name = None
-    for candidate in ("run_id", "run_ref"):
+    for candidate in ("run_id", "run_ref", "run_number", "run_num"):
         if candidate in header_clean:
             run_ref_col_name = candidate
             break
 
     if run_ref_col_name is None:
         raise CsvHeaderError(
-            "CSV header must contain a run reference column ('run_id' or 'run_ref')."
+            "CSV header must contain a run reference column ('run_id', 'run_ref', 'run_number', or 'run_num')."
         )
 
     run_ref_idx = header_clean.index(run_ref_col_name)
@@ -69,8 +69,14 @@ def import_results_from_csv(
     if not response_indices:
         raise CsvHeaderError("CSV header contains no valid response columns.")
 
-    # Valid run IDs in design if design is provided
-    valid_run_ids = {run.run_id for run in design.runs} if design else None
+    # Build run maps if design is provided
+    run_id_map: Dict[str, str] = {}
+    run_num_map: Dict[str, str] = {}
+    if design:
+        for run in design.runs:
+            run_id_map[run.run_id] = run.run_id
+            if run.run_number is not None:
+                run_num_map[str(run.run_number)] = run.run_id
 
     entries: List[ResultEntry] = []
     line_num = 1  # Header was line 1
@@ -97,13 +103,20 @@ def import_results_from_csv(
                 message=f"Row {line_num} has an empty run reference value.",
             )
 
-        if valid_run_ids is not None and run_ref_val not in valid_run_ids:
-            raise CsvRowImportError(
-                row_number=line_num,
-                field_name=run_ref_col_name,
-                invalid_value=run_ref_val,
-                message=f"Row {line_num}: Unknown run reference '{run_ref_val}'.",
-            )
+        resolved_run_id = run_ref_val
+        if design:
+            if run_ref_val in run_id_map:
+                resolved_run_id = run_id_map[run_ref_val]
+            elif run_ref_val in run_num_map:
+                resolved_run_id = run_num_map[run_ref_val]
+            else:
+                raise CsvRowImportError(
+                    row_number=line_num,
+                    field_name=run_ref_col_name,
+                    invalid_value=run_ref_val,
+                    message=f"Row {line_num}: Unknown run reference '{run_ref_val}'.",
+                )
+
 
         values: Dict[str, Any] = {}
         for resp_name, resp_idx in response_indices.items():
@@ -136,7 +149,8 @@ def import_results_from_csv(
                     message=f"Row {line_num}, Field '{resp_name}' invalid value: '{cell_val}' (expected numeric).",
                 )
 
-        entry = ResultEntry(run_ref=run_ref_val, values=values, status="complete")
+        entry = ResultEntry(run_ref=resolved_run_id, values=values, status="complete")
         entries.append(entry)
 
     return entries
+

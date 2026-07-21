@@ -22,6 +22,7 @@ from doe.models.experiment import Experiment
 @dataclass
 class Run:
     run_id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    run_number: Optional[int] = None
     factor_values: Dict[str, Any] = field(default_factory=dict)
     metadata: Optional[Dict[str, Any]] = None
     schema_version: str = "1.0"
@@ -77,6 +78,7 @@ class Run:
         return {
             "schema_version": self.schema_version,
             "run_id": self.run_id,
+            "run_number": self.run_number,
             "factor_values": self.factor_values,
             "metadata": self.metadata,
         }
@@ -86,9 +88,11 @@ class Run:
         return cls(
             schema_version=data.get("schema_version", "1.0"),
             run_id=data.get("run_id", ""),
+            run_number=data.get("run_number"),
             factor_values=data.get("factor_values", {}),
             metadata=data.get("metadata"),
         )
+
 
 # ---------------------------------------------------------------------------
 # Block model (optional grouping of runs)

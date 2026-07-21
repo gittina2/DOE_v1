@@ -86,3 +86,29 @@ run_001,not_a_number
     assert exc_info.value.row_number == 2
     assert exc_info.value.field_name == "yield"
     assert exc_info.value.invalid_value == "not_a_number"
+
+
+def test_import_results_csv_with_run_number():
+    design = Design(
+        design_id="des_001",
+        design_type="full_factorial",
+        experiment_ref="exp_001",
+        runs=[
+            Run(run_id="run_uuid_101", run_number=1, factor_values={"temp": 100}),
+            Run(run_id="run_uuid_102", run_number=2, factor_values={"temp": 200}),
+        ],
+    )
+    responses = [Response(name="yield", type="continuous")]
+
+    csv_content = """run_number,yield
+1,98.5
+2,99.0
+"""
+    stream = io.StringIO(csv_content)
+    entries = import_results_from_csv(stream, design=design, responses=responses)
+    assert len(entries) == 2
+    assert entries[0].run_ref == "run_uuid_101"
+    assert entries[0].values == {"yield": 98.5}
+    assert entries[1].run_ref == "run_uuid_102"
+    assert entries[1].values == {"yield": 99.0}
+
