@@ -178,12 +178,12 @@ class WorkflowState:
 
         allowed_transitions = {
             "empty": ["experiment_created"],
-            "experiment_created": ["design_generated"],
-            "design_generated": ["results_in_progress", "results_complete"],
-            "results_in_progress": ["results_in_progress", "results_complete"],
-            "results_complete": ["results_in_progress", "results_complete", "analysis_created"],
+            "experiment_created": ["design_generated", "report_generated"],
+            "design_generated": ["results_in_progress", "results_complete", "report_generated"],
+            "results_in_progress": ["results_in_progress", "results_complete", "report_generated"],
+            "results_complete": ["results_in_progress", "results_complete", "analysis_created", "report_generated"],
             "analysis_created": ["report_generated"],
-            "report_generated": []
+            "report_generated": ["report_generated"],
         }
 
         if new_step not in allowed_transitions[self.step]:
