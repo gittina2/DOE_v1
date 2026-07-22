@@ -3,6 +3,7 @@ from typing import Any, Literal, Optional, Dict
 from doe.models.design import Design
 from doe.models.experiment import Experiment
 from doe.models.results import Results
+from doe.models.analysis import Analysis
 from doe.models.exceptions import WorkflowStateMismatchError, SchemaVersionMismatchError
 
 
@@ -104,6 +105,8 @@ class WorkflowState:
             self.design.validate(self.experiment)
             if hasattr(self.results, "validate"):
                 self.results.validate()
+            if hasattr(self.analysis, "validate"):
+                self.analysis.validate()
 
             
         elif self.step == "report_generated":
@@ -135,6 +138,9 @@ class WorkflowState:
         results_data = data.get("results")
         results = Results.from_dict(results_data) if isinstance(results_data, dict) else results_data
 
+        analysis_data = data.get("analysis")
+        analysis = Analysis.from_dict(analysis_data) if isinstance(analysis_data, dict) else analysis_data
+
         return cls(
             schema_version=data.get("schema_version", "1.0"),
             step=data.get("step", "empty"),
@@ -142,7 +148,7 @@ class WorkflowState:
             experiment=experiment,
             design=design,
             results=results,
-            analysis=data.get("analysis"),
+            analysis=analysis,
         )
 
     def save_to_json(self, file_path: str) -> None:

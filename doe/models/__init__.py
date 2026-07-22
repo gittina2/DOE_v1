@@ -42,6 +42,7 @@ from .experiment import Experiment, DesignType
 from .workflow_state import WorkflowState, WorkflowStep
 from .design import Run, Block, Design
 from .results import ResultEntry, Results
+from .analysis import Analysis
 
 
 

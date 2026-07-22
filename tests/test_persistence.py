@@ -128,3 +128,57 @@ def test_persistence_results_roundtrip(tmp_path):
     assert ws_loaded.results.entries[0].values == {"yield": 94.2}
 
 
+def test_persistence_analysis_created_roundtrip(tmp_path):
+    from doe.models.design import Design, Run
+    from doe.models.results import ResultEntry, Results
+    from doe.models.analysis import Analysis
+
+    f = Factor(name="temp", type="continuous", lower_bound=0.0, upper_bound=100.0)
+    r = Response(name="yield", type="continuous")
+    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r], design_type="full_factorial")
+    design = Design(
+        design_id="des_001",
+        design_type="full_factorial",
+        experiment_ref=exp.experiment_id,
+        runs=[
+            Run(run_id="run_001", factor_values={"temp": 0.0}),
+            Run(run_id="run_002", factor_values={"temp": 100.0}),
+        ],
+    )
+    res_entry1 = ResultEntry(run_ref="run_001", values={"yield": 94.2}, status="complete")
+    res_entry2 = ResultEntry(run_ref="run_002", values={"yield": 96.8}, status="complete")
+    results = Results(design_ref=design.design_id, entries=[res_entry1, res_entry2], completeness="complete")
+
+    analysis = Analysis(
+        experiment_ref=exp.experiment_id,
+        design_ref=design.design_id,
+        results_ref=results.results_id,
+        model_type="linear",
+        coefficients={"Intercept": 94.2, "temp": 0.026},
+        r_squared=0.99,
+        adjusted_r_squared=0.98,
+        residuals=[0.0, 0.0],
+    )
+
+    ws = WorkflowState(
+        step="analysis_created",
+        experiment=exp,
+        design=design,
+        results=results,
+        analysis=analysis,
+        audit={"step": "analysis_created"},
+    )
+
+    file_path = tmp_path / "workflow_analysis.json"
+    ws.save_to_json(str(file_path))
+
+    ws_loaded = WorkflowState.load_from_json(str(file_path))
+    assert ws_loaded == ws
+    assert ws_loaded.step == "analysis_created"
+    assert ws_loaded.analysis is not None
+    assert isinstance(ws_loaded.analysis, Analysis)
+    assert ws_loaded.analysis.coefficients == {"Intercept": 94.2, "temp": 0.026}
+    assert ws_loaded.analysis.r_squared == 0.99
+
+
+

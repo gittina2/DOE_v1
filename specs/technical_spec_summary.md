@@ -1,4 +1,4 @@
-# DOE Core Technical Specification Knowledge Base
+ DOE Core Technical Specification Knowledge Base
 
 This document provides a structured, precise summary of the Python core for the DOE (Design of Experiments) project based on `specs/technical_spec.md`. It outlines the architectural principles, domain models, workflows, binding rules, and lists key ambiguities, conflicts, and open decisions.
 
