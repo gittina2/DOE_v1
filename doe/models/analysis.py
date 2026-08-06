@@ -11,6 +11,7 @@ class Analysis:
     design_ref: str
     results_ref: str
     model_type: str = "linear"
+    model_formula: Optional[str] = None
     coefficients: Optional[Dict[str, float]] = None
     anova_table: Optional[List[Dict[str, Any]]] = None
     p_values: Optional[Dict[str, float]] = None
@@ -54,6 +55,7 @@ class Analysis:
             "schema_version": self.schema_version,
             "analysis_id": self.analysis_id,
             "model_type": self.model_type,
+            "model_formula": self.model_formula,
             "experiment_ref": self.experiment_ref,
             "design_ref": self.design_ref,
             "results_ref": self.results_ref,
@@ -76,6 +78,7 @@ class Analysis:
             schema_version=data.get("schema_version", "1.0"),
             analysis_id=data.get("analysis_id", f"ana_{uuid.uuid4().hex[:8]}"),
             model_type=data.get("model_type", "linear"),
+            model_formula=data.get("model_formula"),
             experiment_ref=data.get("experiment_ref", ""),
             design_ref=data.get("design_ref", ""),
             results_ref=data.get("results_ref", ""),

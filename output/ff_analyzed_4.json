@@ -1,0 +1,207 @@
+{
+    "schema_version": "1.0",
+    "step": "analysis_created",
+    "audit": {
+        "action": "generate_design",
+        "experiment_id": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
+        "experiment_name": "fullfact1",
+        "design_id": "980b413b-5793-4074-9803-73536a67f759",
+        "design_type": "full_factorial",
+        "inserted_results_count": 4,
+        "total_results_count": 4,
+        "transition": "results_complete -> analysis_created",
+        "analysis_id": "ana_6eb9efad"
+    },
+    "experiment": {
+        "schema_version": "1.0",
+        "experiment_id": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
+        "name": "fullfact1",
+        "description": null,
+        "factors": [
+            {
+                "schema_version": "1.0",
+                "name": "T",
+                "type": "continuous",
+                "unit": "C",
+                "levels": null,
+                "lower_bound": 20.0,
+                "upper_bound": 60.0,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "name": "conc_base",
+                "type": "continuous",
+                "unit": null,
+                "levels": null,
+                "lower_bound": 1.0,
+                "upper_bound": 2.0,
+                "metadata": null
+            }
+        ],
+        "responses": [
+            {
+                "schema_version": "1.0",
+                "name": "resa",
+                "type": "continuous",
+                "unit": null,
+                "metadata": null
+            }
+        ],
+        "design_type": "full_factorial",
+        "planned_runs": null,
+        "metadata": null
+    },
+    "design": {
+        "schema_version": "1.0",
+        "design_id": "980b413b-5793-4074-9803-73536a67f759",
+        "design_type": "full_factorial",
+        "experiment_ref": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
+        "runs": [
+            {
+                "schema_version": "1.0",
+                "run_id": "d3a46762-ca01-48bc-9250-cc8b5b8577cd",
+                "run_number": 1,
+                "factor_values": {
+                    "T": 20.0,
+                    "conc_base": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "dbb61fe3-9497-4dba-8332-38568a9d0892",
+                "run_number": 2,
+                "factor_values": {
+                    "T": 20.0,
+                    "conc_base": 2.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "5e81c244-aef7-4af9-82df-917cd68f28a6",
+                "run_number": 3,
+                "factor_values": {
+                    "T": 60.0,
+                    "conc_base": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "3c15e7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "run_number": 4,
+                "factor_values": {
+                    "T": 60.0,
+                    "conc_base": 2.0
+                },
+                "metadata": null
+            }
+        ],
+        "blocks": [],
+        "randomization": false,
+        "order": null,
+        "metadata": null
+    },
+    "results": {
+        "schema_version": "1.0",
+        "results_id": "res_4a3b8922",
+        "design_ref": "980b413b-5793-4074-9803-73536a67f759",
+        "entries": [
+            {
+                "run_ref": "d3a46762-ca01-48bc-9250-cc8b5b8577cd",
+                "values": {
+                    "resa": 10
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "dbb61fe3-9497-4dba-8332-38568a9d0892",
+                "values": {
+                    "resa": 2
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "5e81c244-aef7-4af9-82df-917cd68f28a6",
+                "values": {
+                    "resa": 5
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "3c15e7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "values": {
+                    "resa": 3
+                },
+                "status": "complete",
+                "metadata": null
+            }
+        ],
+        "completeness": "complete",
+        "metadata": null
+    },
+    "analysis": {
+        "schema_version": "1.0",
+        "analysis_id": "ana_6eb9efad",
+        "model_type": "linear",
+        "model_formula": "resa ~ T + conc_base",
+        "experiment_ref": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
+        "design_ref": "980b413b-5793-4074-9803-73536a67f759",
+        "results_ref": "res_4a3b8922",
+        "coefficients": {
+            "Intercept": 14.5,
+            "T": -0.05,
+            "conc_base": -5.0
+        },
+        "anova_table": [
+            {
+                "source": "Model",
+                "ss": 29.0,
+                "df": 2,
+                "ms": 14.5,
+                "f_value": 1.611111,
+                "p_value": 0.486664
+            },
+            {
+                "source": "Residuals",
+                "ss": 9.0,
+                "df": 1,
+                "ms": 9.0,
+                "f_value": null,
+                "p_value": null
+            },
+            {
+                "source": "Total",
+                "ss": 38.0,
+                "df": 3,
+                "ms": null,
+                "f_value": null,
+                "p_value": null
+            }
+        ],
+        "p_values": {
+            "Intercept": 0.235109,
+            "T": 0.625666,
+            "conc_base": 0.344042
+        },
+        "r_squared": 0.763158,
+        "adjusted_r_squared": 0.289474,
+        "residuals": [
+            1.5,
+            -1.5,
+            -1.5,
+            1.5
+        ],
+        "diagnostics": {
+            "response_variable": "resa",
+            "n_observations": 4,
+            "n_parameters": 3
+        },
+        "metadata": null
+    }
+}

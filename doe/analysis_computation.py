@@ -116,7 +116,8 @@ def fit_linear_model(
 
     results_by_run = {entry.run_ref: entry for entry in results.entries}
 
-    terms: List[str] = ["Intercept"]
+    terms: List[str] = ["Intercept"]    
+
     for factor in experiment.factors:
         f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
         if f_type == "continuous":
@@ -128,6 +129,14 @@ def fit_linear_model(
                 terms.append(f"{factor.name}_{lvl}")
         else:
             raise InvalidAnalysisInputError(f"Unsupported factor type '{f_type}'.")
+        
+    if len(terms) == 1:
+            model_formula = f"{response_name} ~ 1"
+    else:
+        model_formula = (
+            f"{response_name} ~ "
+            + " + ".join(terms[1:])
+        )
 
     p = len(terms)
     X: List[List[float]] = []
@@ -228,6 +237,8 @@ def fit_linear_model(
         p_val = _compute_t_pvalue(t_stat, df_res)
         p_values[term] = float(round(p_val, 6))
 
+  
+
     f_pvalue = _compute_f_pvalue(f_value, df_model, df_res) if f_value is not None else None
 
     anova_table = [
@@ -262,6 +273,7 @@ def fit_linear_model(
         design_ref=design.design_id,
         results_ref=results.results_id,
         model_type="linear",
+        model_formula=model_formula,
         coefficients=coefficients,
         anova_table=anova_table,
         p_values=p_values,

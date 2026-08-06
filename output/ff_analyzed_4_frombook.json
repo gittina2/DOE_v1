@@ -1,0 +1,303 @@
+{
+    "schema_version": "1.0",
+    "step": "analysis_created",
+    "audit": {
+        "action": "generate_design",
+        "experiment_id": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
+        "experiment_name": "fullfact1",
+        "design_id": "980b413b-5793-4074-9803-73536a67f759",
+        "design_type": "full_factorial",
+        "inserted_results_count": 4,
+        "total_results_count": 4,
+        "transition": "results_complete -> analysis_created",
+        "analysis_id": "ana_9feb1d3b"
+    },
+    "experiment": {
+        "schema_version": "1.0",
+        "experiment_id": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
+        "name": "fullfact1",
+        "description": null,
+        "factors": [
+            {
+                "schema_version": "1.0",
+                "name": "conc_base1",
+                "type": "continuous",
+                "unit": "",
+                "levels": null,
+                "lower_bound": 1,
+                "upper_bound": 2.5,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "name": "conc_base2",
+                "type": "continuous",
+                "unit": null,
+                "levels": null,
+                "lower_bound": 1.0,
+                "upper_bound": 2.5,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "name": "conc_base3",
+                "type": "continuous",
+                "unit": null,
+                "levels": null,
+                "lower_bound": 1.0,
+                "upper_bound": 2.5,
+                "metadata": null
+            }
+        ],
+        "responses": [
+            {
+                "schema_version": "1.0",
+                "name": "rispY",
+                "type": "continuous",
+                "unit": null,
+                "metadata": null
+            }
+        ],
+        "design_type": "full_factorial",
+        "planned_runs": null,
+        "metadata": null
+    },
+    "design": {
+        "schema_version": "1.0",
+        "design_id": "980b413b-5793-4074-9803-73536a67f759",
+        "design_type": "full_factorial",
+        "experiment_ref": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
+        "runs": [
+            {
+                "schema_version": "1.0",
+                "run_id": "d3a46762-ca01-48bc-9250-cc8b5b8577cd",
+                "run_number": 1,
+                "factor_values": {
+                    "conc_base1": 1.1,
+                    "conc_base2": 1.1,
+                    "conc_base3": 1.9
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "dbb61fe3-9497-4dba-8332-38568a9d0892",
+                "run_number": 2,
+                "factor_values": {
+                    "conc_base1": 1.8,
+                    "conc_base2": 1.4,
+                    "conc_base3": 1.1
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "5e81c244-aef7-4af9-82df-917cd68f28a6",
+                "run_number": 3,
+                "factor_values": {
+                    "conc_base1": 2.5,
+                    "conc_base2": 1.1,
+                    "conc_base3": 1.7
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "3c15e7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "run_number": 4,
+                "factor_values": {
+                    "conc_base1": 1.8,
+                    "conc_base2": 1.4,
+                    "conc_base3": 2.5
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "5e7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "run_number": 4,
+                "factor_values": {
+                    "conc_base1": 1.8,
+                    "conc_base2": 2.5,
+                    "conc_base3": 1.9
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "e7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "run_number": 4,
+                "factor_values": {
+                    "conc_base1": 1.8,
+                    "conc_base2": 1.8,
+                    "conc_base3": 2.5
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "run_number": 4,
+                "factor_values": {
+                    "conc_base1": 2.5,
+                    "conc_base2": 1.1,
+                    "conc_base3": 1.9
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.0",
+                "run_id": "a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "run_number": 4,
+                "factor_values": {
+                    "conc_base1": 1.8,
+                    "conc_base2": 2.5,
+                    "conc_base3": 1.7
+                },
+                "metadata": null
+            }
+        ],
+        "blocks": [],
+        "randomization": false,
+        "order": null,
+        "metadata": null
+    },
+    "results": {
+        "schema_version": "1.0",
+        "results_id": "res_4a3b8922",
+        "design_ref": "980b413b-5793-4074-9803-73536a67f759",
+        "entries": [
+            {
+                "run_ref": "d3a46762-ca01-48bc-9250-cc8b5b8577cd",
+                "values": {
+                    "rispY": 25.2
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "dbb61fe3-9497-4dba-8332-38568a9d0892",
+                "values": {
+                    "rispY": 23.9
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "5e81c244-aef7-4af9-82df-917cd68f28a6",
+                "values": {
+                    "rispY": 26.3
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "3c15e7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "values": {
+                    "rispY": 29.8
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "5e7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "values": {
+                    "rispY": 32.5
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "e7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "values": {
+                    "rispY": 26.3
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "7a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "values": {
+                    "rispY": 29.7
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "a0-6699-4800-a2c0-4e4bcd5af3c2",
+                "values": {
+                    "rispY": 30
+                },
+                "status": "complete",
+                "metadata": null
+            }
+        ],
+        "completeness": "complete",
+        "metadata": null
+    },
+    "analysis": {
+        "schema_version": "1.0",
+        "analysis_id": "ana_9feb1d3b",
+        "model_type": "linear",
+        "model_formula": "rispY ~ conc_base1 + conc_base2 + conc_base3",
+        "experiment_ref": "f4f659ac-14da-4aa6-8e4b-093b7499a1b7",
+        "design_ref": "980b413b-5793-4074-9803-73536a67f759",
+        "results_ref": "res_4a3b8922",
+        "coefficients": {
+            "Intercept": 13.632269,
+            "conc_base1": 2.468221,
+            "conc_base2": 3.243484,
+            "conc_base3": 2.33755
+        },
+        "anova_table": [
+            {
+                "source": "Model",
+                "ss": 36.486308,
+                "df": 3,
+                "ms": 12.162103,
+                "f_value": 2.000968,
+                "p_value": 0.256252
+            },
+            {
+                "source": "Residuals",
+                "ss": 24.312442,
+                "df": 4,
+                "ms": 6.07811,
+                "f_value": null,
+                "p_value": null
+            },
+            {
+                "source": "Total",
+                "ss": 60.79875,
+                "df": 7,
+                "ms": null,
+                "f_value": null,
+                "p_value": null
+            }
+        ],
+        "p_values": {
+            "Intercept": 0.11234,
+            "conc_base1": 0.310092,
+            "conc_base2": 0.111393,
+            "conc_base3": 0.320917
+        },
+        "r_squared": 0.600116,
+        "adjusted_r_squared": 0.300203,
+        "residuals": [
+            0.84351,
+            -1.28725,
+            -1.04449,
+            1.34018,
+            1.874877,
+            -3.457214,
+            1.888,
+            -0.157612
+        ],
+        "diagnostics": {
+            "response_variable": "rispY",
+            "n_observations": 8,
+            "n_parameters": 4
+        },
+        "metadata": null
+    }
+}
