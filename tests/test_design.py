@@ -75,16 +75,6 @@ def test_design_invalid_run(sample_experiment):
     with pytest.raises(DomainValidationError):
         design.validate(sample_experiment)
 
-def test_design_type_mismatch(sample_experiment, sample_runs):
-
-    design = Design(
-        experiment_ref=sample_experiment.experiment_id,
-        design_type="fractional_factorial",  # Mismatched design type
-        runs=sample_runs
-    )
-
-    with pytest.raises(IncompatibleFactorDefinitionError):
-        design.validate(sample_experiment)
 
 def test_design_wrong_experiment_reference(sample_runs, sample_experiment):
 

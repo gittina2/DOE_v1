@@ -21,7 +21,6 @@ def sample_state():
         name="Test Experiment",
         factors=[Factor(name="temp", type="continuous", lower_bound=100.0, upper_bound=200.0)],
         responses=[Response(name="yield", type="continuous")],
-        design_type="full_factorial",
     )
     design = Design(
         design_id="des_001",

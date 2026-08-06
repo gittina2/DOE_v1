@@ -3,7 +3,6 @@ from doe.models import (
     Factor,
     Response,
     Experiment,
-    DesignType,
     WorkflowState,
     DomainValidationError,
 )
@@ -12,9 +11,7 @@ def create_experiment(
     name: str,
     factors: List[Factor],
     responses: List[Response],
-    design_type: DesignType,
     description: Optional[str] = None,
-    planned_runs: Optional[int] = None,
     metadata: Optional[Dict[str, Any]] = None,
 ) -> WorkflowState:
     # 4.1 create_experiment Preconditions check
@@ -28,12 +25,10 @@ def create_experiment(
         name=name,
         factors=factors,
         responses=responses,
-        design_type=design_type,
         description=description,
-        planned_runs=planned_runs,
         metadata=metadata,
     )
-    # This will check model consistency (unique names, valid design type, etc.)
+    # This will check model consistency (unique names, etc.)
     experiment.validate()
 
     # Create the WorkflowState as of postconditions:

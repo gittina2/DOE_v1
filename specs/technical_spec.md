@@ -1,3 +1,6 @@
+Technical Specification
+Version: 1.0
+
 1. Purpose and principles
 1.1 Purpose
 This document defines the technical specification for the Python core of the open-source DOE (Design of Experiments) project. The MVP goal is to provide a command-line engine to create experiments, generate designs, enter results, compute statistical analyses, and produce reports, while keeping the system modular, extensible, and maintainable.
@@ -811,3 +814,4 @@ JSON migration strategy as the schema evolves;
 
 possible richer CLI support beyond the base workflow.
 
+The project may be extended through versioned technical specification extensions.

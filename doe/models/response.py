@@ -14,7 +14,7 @@ class Response:
     type: ResponseType
     unit: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
-    schema_version: str = "1.0"
+    schema_version: str = "1.1"
 
     def validate(self) -> None:
         if not isinstance(self.name, str) or not self.name.strip():
@@ -39,7 +39,7 @@ class Response:
     @classmethod
     def from_dict(cls, data: dict) -> "Response":
         return cls(
-            schema_version=data.get("schema_version", "1.0"),
+            schema_version=data.get("schema_version", "1.1"),
             name=data.get("name", ""),
             type=data.get("type", ""),
             unit=data.get("unit"),

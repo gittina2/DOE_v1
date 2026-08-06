@@ -54,7 +54,6 @@ class TestGenerateFactorialCombinations:
                 Factor(name="B", type="categorical", levels=["b1", "b2", "b3"]),
             ],
             responses=[Response(name="Y", type="continuous")],
-            design_type="full_factorial",
         )
         names, combos = generate_factorial_combinations(exp)
         assert names == ["A", "B"]
@@ -77,7 +76,6 @@ class TestGenerateFactorialCombinations:
                 Factor(name="temp", type="continuous", lower_bound=10.0, upper_bound=90.0),
             ],
             responses=[Response(name="Y", type="continuous")],
-            design_type="full_factorial",
         )
         names, combos = generate_factorial_combinations(exp)
         assert names == ["temp"]
@@ -93,7 +91,6 @@ class TestGenerateFactorialCombinations:
                 Factor(name="material", type="categorical", levels=["steel", "wood"]),
             ],
             responses=[Response(name="Y", type="continuous")],
-            design_type="full_factorial",
         )
         names, combos = generate_factorial_combinations(exp)
         assert len(combos) == 4  # 2 * 2
@@ -110,7 +107,6 @@ class TestGenerateFactorialCombinations:
                 Factor(name="C", type="continuous", lower_bound=1.0, upper_bound=5.0),
             ],
             responses=[Response(name="Y", type="continuous")],
-            design_type="full_factorial",
         )
         names, combos = generate_factorial_combinations(exp)
         assert len(combos) == 2 * 3 * 2  # = 12
@@ -129,7 +125,6 @@ class TestFullFactorialGenerator:
                 Factor(name="B", type="categorical", levels=["x", "y"]),
             ],
             responses=[Response(name="Y", type="continuous")],
-            design_type="full_factorial",
         )
         defaults.update(kwargs)
         return Experiment(**defaults)
@@ -172,12 +167,6 @@ class TestFullFactorialGenerator:
         exp = self._make_experiment()
         design = gen.generate(exp)
         assert design.experiment_ref == exp.experiment_id
-
-    def test_rejects_unsupported_design_type(self):
-        gen = FullFactorialGenerator()
-        exp = self._make_experiment(design_type="fractional_factorial")
-        with pytest.raises(UnsupportedDesignTypeError, match="does not support"):
-            gen.generate(exp)
 
     def test_continuous_factor_generates_two_level_runs(self):
         gen = FullFactorialGenerator()

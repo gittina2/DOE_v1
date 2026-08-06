@@ -1,8 +1,10 @@
 import uuid
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from doe.models.exceptions import DomainValidationError, InvalidAnalysisInputError
+
+ModelType = Literal["linear", "interaction", "quadratic"]
 
 
 @dataclass
@@ -11,7 +13,8 @@ class Analysis:
     design_ref: str
     results_ref: str
     model_type: str = "linear"
-    model_formula: Optional[str] = None
+    formula: Optional[str] = None
+    terms: Optional[List[str]] = None
     coefficients: Optional[Dict[str, float]] = None
     anova_table: Optional[List[Dict[str, Any]]] = None
     p_values: Optional[Dict[str, float]] = None
@@ -20,7 +23,7 @@ class Analysis:
     residuals: Optional[List[float]] = None
     diagnostics: Optional[Dict[str, Any]] = None
     analysis_id: str = field(default_factory=lambda: f"ana_{uuid.uuid4().hex[:8]}")
-    schema_version: str = "1.0"
+    schema_version: str = "1.1"
     metadata: Optional[Dict[str, Any]] = None
 
     def validate(self) -> None:
@@ -39,6 +42,12 @@ class Analysis:
         if not isinstance(self.model_type, str) or not self.model_type.strip():
             raise DomainValidationError("model_type must be a non-empty string.")
 
+        supported_model_types = ("linear", "interaction", "quadratic")
+        if self.model_type not in supported_model_types:
+            raise DomainValidationError(
+                f"Unsupported model_type: '{self.model_type}'. Supported: {supported_model_types}"
+            )
+
         if self.r_squared is not None:
             if not isinstance(self.r_squared, (int, float)) or not (0.0 <= self.r_squared <= 1.0):
                 raise DomainValidationError("r_squared must be a float between 0.0 and 1.0.")
@@ -55,7 +64,8 @@ class Analysis:
             "schema_version": self.schema_version,
             "analysis_id": self.analysis_id,
             "model_type": self.model_type,
-            "model_formula": self.model_formula,
+            "formula": self.formula,
+            "terms": self.terms,
             "experiment_ref": self.experiment_ref,
             "design_ref": self.design_ref,
             "results_ref": self.results_ref,
@@ -75,10 +85,11 @@ class Analysis:
             raise DomainValidationError("Analysis data must be a dictionary.")
 
         return cls(
-            schema_version=data.get("schema_version", "1.0"),
+            schema_version=data.get("schema_version", "1.1"),
             analysis_id=data.get("analysis_id", f"ana_{uuid.uuid4().hex[:8]}"),
             model_type=data.get("model_type", "linear"),
-            model_formula=data.get("model_formula"),
+            formula=data.get("formula"),
+            terms=data.get("terms"),
             experiment_ref=data.get("experiment_ref", ""),
             design_ref=data.get("design_ref", ""),
             results_ref=data.get("results_ref", ""),
@@ -91,3 +102,4 @@ class Analysis:
             diagnostics=data.get("diagnostics"),
             metadata=data.get("metadata"),
         )
+

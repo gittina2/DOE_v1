@@ -38,11 +38,11 @@ from .exceptions import (
 )
 from .factor import Factor, FactorType
 from .response import Response, ResponseType
-from .experiment import Experiment, DesignType
+from .experiment import Experiment
 from .workflow_state import WorkflowState, WorkflowStep
-from .design import Run, Block, Design
+from .design import Run, Block, Design, DesignType, FactorCoding
 from .results import ResultEntry, Results
-from .analysis import Analysis
+from .analysis import Analysis, ModelType
 
 
 

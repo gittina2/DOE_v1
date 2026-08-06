@@ -25,7 +25,7 @@ def format_markdown_report(state: WorkflowState) -> str:
     lines.append("| --- | --- |")
     lines.append(f"| **Experiment ID** | {exp.experiment_id} |")
     lines.append(f"| **Name** | {exp.name} |")
-    lines.append(f"| **Design Type** | {exp.design_type} |")
+    lines.append(f"| **Design Type** | {state.design.design_type if state.design else 'N/A'} |")
     lines.append(f"| **Description** | {exp.description or 'N/A'} |")
     lines.append(f"| **Schema Version** | {exp.schema_version} |")
     lines.append(f"| **Current Workflow Step** | {state.step} |")

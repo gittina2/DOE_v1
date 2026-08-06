@@ -23,7 +23,7 @@ def test_persistence_empty_state_roundtrip(tmp_path):
 def test_persistence_experiment_created_roundtrip(tmp_path):
     f = Factor(name="temp", type="continuous", lower_bound=0.0, upper_bound=100.0)
     r = Response(name="yield", type="continuous")
-    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r], design_type="full_factorial")
+    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r])
     
     ws = WorkflowState(step="experiment_created", experiment=exp, audit={"user": "martin"})
     file_path = tmp_path / "workflow.json"
@@ -61,18 +61,16 @@ def test_persistence_invalid_state_on_load(tmp_path):
     import json
     # Writing JSON with inconsistent step (empty but has experiment)
     bad_data = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "step": "empty",
         "audit": {},
         "experiment": {
-            "schema_version": "1.0",
+            "schema_version": "1.1",
             "experiment_id": "exp123",
             "name": "Yield Optimization",
             "description": None,
             "factors": [],
             "responses": [],
-            "design_type": "full_factorial",
-            "planned_runs": None,
             "metadata": None
         },
         "design": None,
@@ -92,7 +90,7 @@ def test_persistence_results_roundtrip(tmp_path):
 
     f = Factor(name="temp", type="continuous", lower_bound=0.0, upper_bound=100.0)
     r = Response(name="yield", type="continuous")
-    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r], design_type="full_factorial")
+    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r])
     design = Design(
         design_id="des_001",
         design_type="full_factorial",
@@ -135,7 +133,7 @@ def test_persistence_analysis_created_roundtrip(tmp_path):
 
     f = Factor(name="temp", type="continuous", lower_bound=0.0, upper_bound=100.0)
     r = Response(name="yield", type="continuous")
-    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r], design_type="full_factorial")
+    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r])
     design = Design(
         design_id="des_001",
         design_type="full_factorial",

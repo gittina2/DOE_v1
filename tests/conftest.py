@@ -39,7 +39,6 @@ def sample_experiment():
         responses=[
             response
         ],
-        design_type="full_factorial",
     )
 
 

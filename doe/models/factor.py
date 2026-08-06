@@ -19,7 +19,7 @@ class Factor:
     lower_bound: Optional[float] = None
     upper_bound: Optional[float] = None
     metadata: Optional[Dict[str, Any]] = None
-    schema_version: str = "1.0"
+    schema_version: str = "1.1"
 
     def validate(self) -> None:
         if not isinstance(self.name, str) or not self.name.strip():
@@ -72,7 +72,7 @@ class Factor:
     @classmethod
     def from_dict(cls, data: dict) -> "Factor":
         return cls(
-            schema_version=data.get("schema_version", "1.0"),
+            schema_version=data.get("schema_version", "1.1"),
             name=data.get("name", ""),
             type=data.get("type", ""),
             unit=data.get("unit"),

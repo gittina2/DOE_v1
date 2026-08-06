@@ -24,7 +24,7 @@ def test_valid_empty_state():
 def test_valid_experiment_created_state():
     f = Factor(name="temp", type="continuous", lower_bound=0.0, upper_bound=100.0)
     r = Response(name="yield", type="continuous")
-    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r], design_type="full_factorial")
+    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r])
     
     ws = WorkflowState(step="experiment_created", experiment=exp, audit={"user": "martin"})
     ws.validate()
@@ -35,7 +35,7 @@ def test_valid_experiment_created_state():
 def test_empty_state_with_entities_error():
     f = Factor(name="temp", type="continuous", lower_bound=0.0, upper_bound=100.0)
     r = Response(name="yield", type="continuous")
-    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r], design_type="full_factorial")
+    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r])
     
     ws = WorkflowState(step="empty", experiment=exp)
     with pytest.raises(WorkflowStateMismatchError, match="no entities can be defined"):
@@ -49,7 +49,7 @@ def test_experiment_created_missing_experiment_error():
 def test_experiment_created_with_other_entities_error():
     f = Factor(name="temp", type="continuous", lower_bound=0.0, upper_bound=100.0)
     r = Response(name="yield", type="continuous")
-    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r], design_type="full_factorial")
+    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r])
     
     ws = WorkflowState(step="experiment_created", experiment=exp, design={}) # design is defined but shouldn't be
     with pytest.raises(WorkflowStateMismatchError, match="design, results, and analysis must be None"):
@@ -72,7 +72,7 @@ def test_invalid_audit_error():
 def test_propagation_of_entity_validation():
     f = Factor(name="temp", type="continuous") # invalid: missing bounds
     r = Response(name="yield", type="continuous")
-    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r], design_type="full_factorial")
+    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r])
     
     ws = WorkflowState(step="experiment_created", experiment=exp)
     # validate should propagate Factor's validation exception
@@ -82,7 +82,7 @@ def test_propagation_of_entity_validation():
 def test_serialization_round_trip():
     f = Factor(name="temp", type="continuous", lower_bound=0.0, upper_bound=100.0)
     r = Response(name="yield", type="continuous")
-    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r], design_type="full_factorial")
+    exp = Experiment(name="Yield Optimization", factors=[f], responses=[r])
     
     ws1 = WorkflowState(step="experiment_created", experiment=exp, audit={"action": "created"})
     d = ws1.to_dict()
@@ -90,7 +90,7 @@ def test_serialization_round_trip():
     assert d["audit"] == {"action": "created"}
     assert d["experiment"]["name"] == "Yield Optimization"
     assert d["design"] is None
-    assert d["schema_version"] == "1.0"
+    assert d["schema_version"] == "1.1"
 
     ws2 = WorkflowState.from_dict(d)
     assert ws1 == ws2
@@ -113,7 +113,6 @@ def test_serialization_round_trip_with_design():
         name="Yield Optimization",
         factors=[f],
         responses=[r],
-        design_type="full_factorial"
     ) 
 
     design = Design(
@@ -162,7 +161,6 @@ def test_workflow_state_json_acceptance_with_design(tmp_path):
         name="Yield Optimization",
         factors=[f],
         responses=[r],
-        design_type="full_factorial"
     )
 
     design = Design(

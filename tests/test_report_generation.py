@@ -18,7 +18,6 @@ def create_sample_experiment():
         description="Testing temperature effects on yield",
         factors=[f_temp],
         responses=[r_yield],
-        design_type="full_factorial",
         experiment_id="exp_rep_001",
     )
     exp.validate()

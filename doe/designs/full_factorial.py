@@ -9,10 +9,7 @@ MVP representation for continuous factors:
 Categorical factors use the levels list as-is.
 """
 
-from doe.models import InvalidDesignMatrixError
-from doe.models import DuplicateRunIdError
-#from __future__ import annotations
-
+from doe.models import InvalidDesignMatrixError, DuplicateRunIdError, FactorCoding
 import itertools
 import uuid
 from typing import Any, Dict, List, Tuple
@@ -21,10 +18,7 @@ from doe.designs.generator_interface import DesignGenerator
 from doe.models.experiment import Experiment
 from doe.models.factor import Factor
 from doe.models.design import Design, Run
-from doe.models.exceptions import (
-    IncompatibleFactorDefinitionError,
-    UnsupportedDesignTypeError,
-)
+from doe.models.exceptions import IncompatibleFactorDefinitionError
 
 
 def _factor_levels(factor: Factor) -> List[Any]:
@@ -93,7 +87,7 @@ def combinations_to_runs(
             factor_values=combo
         )
 
-     # ensure generated IDs are unique
+        # ensure generated IDs are unique
         if run.run_id in run_ids:
             raise DuplicateRunIdError(
                 f"Duplicate run id generated: {run.run_id}"
@@ -106,12 +100,41 @@ def combinations_to_runs(
 
         runs.append(run)
 
-
     if len({r.run_id for r in runs}) != len(runs):
         raise DuplicateRunIdError(
             "Generated runs contain duplicate identifiers."
         )
     return runs
+
+
+def generate_factor_codings(experiment: Experiment) -> List[FactorCoding]:
+    """Generate factor codings for factors in an experiment."""
+    codings: List[FactorCoding] = []
+    for factor in experiment.factors:
+        f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
+        if f_type == "continuous":
+            codings.append(
+                FactorCoding(
+                    factor_ref=factor.name,
+                    method="two_level",
+                    mapping={
+                        str(factor.lower_bound): -1.0,
+                        str(factor.upper_bound): 1.0,
+                    },
+                )
+            )
+        elif f_type == "categorical" and factor.levels and len(factor.levels) == 2:
+            codings.append(
+                FactorCoding(
+                    factor_ref=factor.name,
+                    method="two_level",
+                    mapping={
+                        str(factor.levels[0]): -1.0,
+                        str(factor.levels[1]): 1.0,
+                    },
+                )
+            )
+    return codings
 
 
 class FullFactorialGenerator(DesignGenerator):
@@ -121,19 +144,9 @@ class FullFactorialGenerator(DesignGenerator):
     """
 
     def generate(self, experiment: Experiment) -> Design:
-        """Generate a full factorial Design from *experiment*.
-
-        The experiment is validated first.  If its ``design_type`` is not
-        ``full_factorial`` the generator raises ``UnsupportedDesignTypeError``.
-        """
+        """Generate a full factorial Design from *experiment*."""
         # Pre-condition: validate experiment
         experiment.validate()
-
-        if experiment.design_type != "full_factorial":
-            raise UnsupportedDesignTypeError(
-                f"FullFactorialGenerator does not support design type "
-                f"'{experiment.design_type}'."
-            )
 
         # Generate all factor combinations
         _factor_names, combinations = generate_factorial_combinations(experiment)
@@ -144,12 +157,16 @@ class FullFactorialGenerator(DesignGenerator):
             experiment
         )
 
+        # Generate factor coding
+        factor_coding = generate_factor_codings(experiment)
+
         # Assemble the Design
         design = Design(
             design_id=str(uuid.uuid4()),
             design_type="full_factorial",
             experiment_ref=experiment.experiment_id,
-            runs=runs, 
+            runs=runs,
+            factor_coding=factor_coding,
         )
 
         # Post-condition: validate the assembled design

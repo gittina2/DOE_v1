@@ -55,7 +55,6 @@ def test_full_lifecycle_programmatic_api(tmp_path):
         description="Full lifecycle test experiment",
         factors=factors,
         responses=responses,
-        design_type="full_factorial",
     )
     assert state.step == "experiment_created"
     assert state.experiment is not None
@@ -209,7 +208,6 @@ def test_full_lifecycle_cli_invocation(tmp_path, capsys):
             "--name", "CLI E2E Exp",
             "--factors-csv", str(factors_csv),
             "--response", "yield:continuous",
-            "--design-type", "full_factorial",
             "--output", str(state_file_1),
         ])
     assert exc_info.value.code == 0

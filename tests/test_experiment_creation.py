@@ -5,7 +5,6 @@ from doe.models import (
     Response,
     WorkflowState,
     DomainValidationError,
-    InvalidDesignTypeError,
     DuplicateFactorNameError,
 )
 
@@ -17,8 +16,6 @@ def test_create_experiment_success():
         name="Opt Yield",
         factors=[f],
         responses=[r],
-        design_type="full_factorial",
-        planned_runs=8,
         description="test description",
         metadata={"key": "val"}
     )
@@ -29,8 +26,6 @@ def test_create_experiment_success():
     assert ws.experiment.name == "Opt Yield"
     assert ws.experiment.factors == [f]
     assert ws.experiment.responses == [r]
-    assert ws.experiment.design_type == "full_factorial"
-    assert ws.experiment.planned_runs == 8
     assert ws.experiment.description == "test description"
     assert ws.experiment.metadata == {"key": "val"}
     assert ws.design is None
@@ -46,7 +41,6 @@ def test_create_experiment_missing_factors():
             name="Opt Yield",
             factors=[],
             responses=[r],
-            design_type="full_factorial"
         )
 
 def test_create_experiment_missing_responses():
@@ -56,7 +50,6 @@ def test_create_experiment_missing_responses():
             name="Opt Yield",
             factors=[f],
             responses=[],
-            design_type="full_factorial"
         )
 
 def test_create_experiment_validation_propagation():
@@ -68,7 +61,6 @@ def test_create_experiment_validation_propagation():
             name="Opt Yield",
             factors=[f],
             responses=[r],
-            design_type="full_factorial"
         )
 
     # Duplicate factor names
@@ -79,15 +71,4 @@ def test_create_experiment_validation_propagation():
             name="Opt Yield",
             factors=[f1, f2],
             responses=[r],
-            design_type="full_factorial"
-        )
-
-    # Invalid design type
-    f = Factor(name="temp", type="continuous", lower_bound=0.0, upper_bound=100.0)
-    with pytest.raises(InvalidDesignTypeError, match="Unsupported design type"):
-        create_experiment(
-            name="Opt Yield",
-            factors=[f],
-            responses=[r],
-            design_type="invalid_design" # type: ignore
         )

@@ -58,7 +58,7 @@ class Results:
     entries: List[ResultEntry] = field(default_factory=list)
     completeness: str = "complete"
     results_id: str = field(default_factory=lambda: f"res_{uuid.uuid4().hex[:8]}")
-    schema_version: str = "1.0"
+    schema_version: str = "1.1"
     metadata: Optional[Dict[str, Any]] = None
 
     def validate(self) -> None:
@@ -111,7 +111,7 @@ class Results:
         ]
 
         return cls(
-            schema_version=data.get("schema_version", "1.0"),
+            schema_version=data.get("schema_version", "1.1"),
             results_id=data.get("results_id", f"res_{uuid.uuid4().hex[:8]}"),
             design_ref=data.get("design_ref", ""),
             entries=entries,

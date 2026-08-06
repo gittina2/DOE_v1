@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from doe.models.exceptions import (
     DomainValidationError,
@@ -15,6 +15,8 @@ from doe.models.exceptions import (
 
 from doe.models.experiment import Experiment
 
+DesignType = Literal["full_factorial", "fractional_factorial"]
+
 # ---------------------------------------------------------------------------
 # Run model
 # ---------------------------------------------------------------------------
@@ -25,7 +27,7 @@ class Run:
     run_number: Optional[int] = None
     factor_values: Dict[str, Any] = field(default_factory=dict)
     metadata: Optional[Dict[str, Any]] = None
-    schema_version: str = "1.0"
+    schema_version: str = "1.1"
 
     def validate(self, experiment: Experiment) -> None:
         """Validate that this run conforms to the provided experiment.
@@ -86,7 +88,7 @@ class Run:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Run":
         return cls(
-            schema_version=data.get("schema_version", "1.0"),
+            schema_version=data.get("schema_version", "1.1"),
             run_id=data.get("run_id", ""),
             run_number=data.get("run_number"),
             factor_values=data.get("factor_values", {}),
@@ -103,7 +105,7 @@ class Block:
     block_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     run_ids: List[str] = field(default_factory=list)
     metadata: Optional[Dict[str, Any]] = None
-    schema_version: str = "1.0"
+    schema_version: str = "1.1"
 
     def validate(self, design: "Design") -> None:
         if not self.block_id:
@@ -133,11 +135,76 @@ class Block:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Block":
         return cls(
-            schema_version=data.get("schema_version", "1.0"),
+            schema_version=data.get("schema_version", "1.1"),
             block_id=data.get("block_id", ""),
             run_ids=data.get("run_ids", []),
             metadata=data.get("metadata"),
         )
+
+
+# ---------------------------------------------------------------------------
+# FactorCoding model – transformation between experimental and coded values
+# ---------------------------------------------------------------------------
+
+@dataclass
+class FactorCoding:
+    """Represents the transformation between experimental values and coded DOE levels.
+
+    Supported coding methods (MVP):
+        - two_level: maps [lower_bound, upper_bound] → [-1, +1]
+        - center_scale: maps by (value - center) / half_range
+    """
+    factor_ref: str
+    method: str
+    mapping: Dict[str, float]
+    metadata: Optional[Dict[str, Any]] = None
+
+    def validate(self) -> None:
+        if not isinstance(self.factor_ref, str) or not self.factor_ref.strip():
+            raise DomainValidationError("factor_ref must be a non-empty string.")
+
+        supported_methods = ("two_level", "center_scale")
+        if self.method not in supported_methods:
+            raise DomainValidationError(
+                f"Unsupported coding method: {self.method}. Supported: {supported_methods}"
+            )
+
+        if not isinstance(self.mapping, dict) or not self.mapping:
+            raise DomainValidationError("mapping must be a non-empty dictionary.")
+
+        for key, value in self.mapping.items():
+            if not isinstance(value, (int, float)):
+                raise DomainValidationError(
+                    f"Coded value for '{key}' must be numeric, got {type(value).__name__}."
+                )
+
+        if self.method == "two_level":
+            coded_values = set(self.mapping.values())
+            if coded_values != {-1.0, 1.0} and coded_values != {-1, 1}:
+                raise DomainValidationError(
+                    "two_level coding must use exactly -1 and +1 coded values."
+                )
+
+        if self.metadata is not None and not isinstance(self.metadata, dict):
+            raise DomainValidationError("metadata must be a dictionary or None.")
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "factor_ref": self.factor_ref,
+            "method": self.method,
+            "mapping": self.mapping,
+            "metadata": self.metadata,
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "FactorCoding":
+        return cls(
+            factor_ref=data.get("factor_ref", ""),
+            method=data.get("method", ""),
+            mapping=data.get("mapping", {}),
+            metadata=data.get("metadata"),
+        )
+
 
 # ---------------------------------------------------------------------------
 # Design model – aggregate of runs (and optional blocks)
@@ -149,11 +216,13 @@ class Design:
     design_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     design_type: str = "full_factorial"
     runs: List[Run] = field(default_factory=list)
+    factor_coding: Optional[List[FactorCoding]] = None
     blocks: List[Block] = field(default_factory=list)  # optional grouping
     randomization: bool = False
     order: Optional[List[str]] = None  # permutation of run IDs if supplied
+    replications: Optional[int] = None
     metadata: Optional[Dict[str, Any]] = None
-    schema_version: str = "1.0"
+    schema_version: str = "1.1"
 
     def validate(self, experiment: Experiment) -> None:
         # Basic structural checks
@@ -189,11 +258,6 @@ class Design:
                 all_blocked.extend(block.run_ids)
             if len(set(all_blocked)) != len(all_blocked):
                 raise DomainValidationError("A run cannot belong to multiple blocks.")
-        # Design type consistency with experiment design_type field
-        if self.design_type != experiment.design_type:
-            raise IncompatibleFactorDefinitionError(
-                f"Design type '{self.design_type}' does not match experiment's design_type '{experiment.design_type}'."
-            )
         # Run count matches expected factorial size for full factorial
         if self.design_type == "full_factorial":
             expected = 1
@@ -208,6 +272,19 @@ class Design:
                 raise RunCountMismatchError(
                     f"Full factorial design expected {expected} runs, got {len(self.runs)}."
                 )
+        # Validate factor coding (if any)
+        if self.factor_coding is not None:
+            factor_names = {f.name for f in experiment.factors}
+            for fc in self.factor_coding:
+                fc.validate()
+                if fc.factor_ref not in factor_names:
+                    raise InconsistentReferenceError(
+                        f"FactorCoding references unknown factor: '{fc.factor_ref}'."
+                    )
+        # Validate replications (if present)
+        if self.replications is not None:
+            if not isinstance(self.replications, int) or self.replications < 1:
+                raise DomainValidationError("replications must be a positive integer.")
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -216,9 +293,11 @@ class Design:
             "design_type": self.design_type,
             "experiment_ref": self.experiment_ref,
             "runs": [run.to_dict() for run in self.runs],
+            "factor_coding": [fc.to_dict() for fc in self.factor_coding] if self.factor_coding is not None else None,
             "blocks": [block.to_dict() for block in self.blocks],
             "randomization": self.randomization,
             "order": self.order,
+            "replications": self.replications,
             "metadata": self.metadata,
         }
 
@@ -227,16 +306,21 @@ class Design:
         exp = data.get("experiment_ref", "")
         runs = [Run.from_dict(r) for r in data.get("runs", [])]
         blocks = [Block.from_dict(b) for b in data.get("blocks", [])]
+        raw_fc = data.get("factor_coding")
+        factor_coding = [FactorCoding.from_dict(fc) for fc in raw_fc] if raw_fc is not None else None
         return cls(
-            schema_version=data.get("schema_version", "1.0"),
+            schema_version=data.get("schema_version", "1.1"),
             design_id=data.get("design_id", ""),
             design_type=data.get("design_type", "full_factorial"),
             experiment_ref=exp,
             runs=runs,
+            factor_coding=factor_coding,
             blocks=blocks,
             randomization=data.get("randomization"),
             order=data.get("order"),
+            replications=data.get("replications"),
             metadata=data.get("metadata"),
         )
 
 # End of design module
+

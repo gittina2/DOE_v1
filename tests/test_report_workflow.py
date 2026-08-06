@@ -15,7 +15,6 @@ def create_sample_workflow_state():
         name="Yield Optimization",
         factors=[f_temp],
         responses=[r_yield],
-        design_type="full_factorial",
         experiment_id="exp_wf_rep_001",
     )
     state = WorkflowState(step="experiment_created", experiment=exp)

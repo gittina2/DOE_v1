@@ -50,8 +50,6 @@ def handle_init_experiment(args) -> int:
             name=args.name,
             factors=factors,
             responses=responses,
-            design_type=args.design_type,
-            planned_runs=args.planned_runs,
             description=args.description,
         )
 
@@ -72,7 +70,7 @@ def handle_generate_design(args) -> int:
     try:
         workflow_state = WorkflowState.load_from_json(args.input)
 
-        new_state = generate_design(workflow_state)
+        new_state = generate_design(workflow_state, design_type=args.design_type)
 
         new_state.save_to_json(args.output)
 
@@ -119,7 +117,8 @@ def handle_analyze(args) -> int:
         state_path = args.state if getattr(args, "state", None) else args.input
         workflow_state = WorkflowState.load_from_json(state_path)
 
-        new_state = analyze_experiment(workflow_state)
+        model_type = getattr(args, "model_type", "linear")
+        new_state = analyze_experiment(workflow_state, model_type=model_type)
 
         output_path = args.output if args.output else state_path
         new_state.save_to_json(output_path)
@@ -199,15 +198,6 @@ def main(argv: Optional[List[str]] = None) -> None:
         help="Response definition in name:type[:unit] format",
     )
     init_parser.add_argument(
-        "--design-type",
-        required=True,
-        choices=["full_factorial", "fractional_factorial"],
-        help="Design type",
-    )
-    init_parser.add_argument(
-        "--planned-runs", type=int, default=None, help="Number of planned runs (optional)"
-    )
-    init_parser.add_argument(
         "--description", default=None, help="Description of the experiment (optional)"
     )
     init_parser.add_argument("--output", required=True, help="Path to save the WorkflowState JSON file")
@@ -218,6 +208,12 @@ def main(argv: Optional[List[str]] = None) -> None:
     )
     design_parser.add_argument(
         "--input", required=True, help="Path to the input WorkflowState JSON file"
+    )
+    design_parser.add_argument(
+        "--design-type",
+        default="full_factorial",
+        choices=["full_factorial", "fractional_factorial"],
+        help="Design type (default: full_factorial)",
     )
     design_parser.add_argument(
         "--output", required=True, help="Path to save the updated WorkflowState JSON file"
@@ -251,6 +247,12 @@ def main(argv: Optional[List[str]] = None) -> None:
         dest="state",
         required=True,
         help="Path to the WorkflowState JSON file",
+    )
+    analyze_parser.add_argument(
+        "--model-type",
+        default="linear",
+        choices=["linear", "interaction", "quadratic"],
+        help="Statistical model type (default: linear)",
     )
     analyze_parser.add_argument(
         "--output",

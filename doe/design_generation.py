@@ -3,14 +3,16 @@ from typing import Type, Dict
 from doe.models.workflow_state import WorkflowState
 from doe.designs.generator_interface import DesignGenerator
 from doe.designs.full_factorial import FullFactorialGenerator
+from doe.designs.fractional_factorial import FractionalFactorialGenerator
 
 from doe.models.exceptions import (UnsupportedDesignTypeError, WorkflowStateMismatchError)
 
 _DESIGN_GENERATORS: Dict[str, Type[DesignGenerator]] = {
     "full_factorial": FullFactorialGenerator,
+    "fractional_factorial": FractionalFactorialGenerator,
 }
 
-def get_design_generator(design_type) -> DesignGenerator:
+def get_design_generator(design_type: str) -> DesignGenerator:
     """
     Select the appropriate design generator.
 
@@ -40,11 +42,19 @@ def get_design_generator(design_type) -> DesignGenerator:
   
 
 def generate_design(
-    state: WorkflowState
+    state: WorkflowState,
+    design_type: str = "full_factorial",
 ) -> WorkflowState:
     
     """
     Generate a DOE design from an experiment stored in a workflow state.
+
+    Parameters
+    ----------
+    state: WorkflowState
+        Current workflow state.
+    design_type: str
+        DOE design strategy (e.g. 'full_factorial', 'fractional_factorial').
 
     Preconditions
     -------------
@@ -67,8 +77,10 @@ def generate_design(
         )
     
     experiment = state.experiment
+    if experiment is None:
+        raise WorkflowStateMismatchError("Experiment must be defined for design generation.")
 
-    generator = get_design_generator(experiment.design_type)
+    generator = get_design_generator(design_type)
 
     design = generator.generate(experiment)
 

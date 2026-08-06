@@ -25,7 +25,7 @@ class WorkflowState:
     design: Optional[Design] = None
     results: Optional[Results] = None
     analysis: Optional[Any] = None
-    schema_version: str = "1.0"
+    schema_version: str = "1.1"
 
     def validate(self) -> None:
         supported_steps = (
@@ -142,7 +142,7 @@ class WorkflowState:
         analysis = Analysis.from_dict(analysis_data) if isinstance(analysis_data, dict) else analysis_data
 
         return cls(
-            schema_version=data.get("schema_version", "1.0"),
+            schema_version=data.get("schema_version", "1.1"),
             step=data.get("step", "empty"),
             audit=data.get("audit", {}),
             experiment=experiment,
@@ -163,9 +163,9 @@ class WorkflowState:
             data = json.load(f)
             
         version = data.get("schema_version")
-        if version != "1.0":
+        if version not in ("1.0", "1.1"):
             raise SchemaVersionMismatchError(
-                f"Unsupported schema version: {version}. Expected '1.0'."
+                f"Unsupported schema version: {version}. Expected '1.0' or '1.1'."
             )
             
         state = cls.from_dict(data)
