@@ -116,7 +116,7 @@ def test_run_serialization_round_trip():
 
     data = run1.to_dict()
 
-    assert data["schema_version"] == "1.0"
+    assert data["schema_version"] == "1.1"
     assert data["factor_values"]["temperature"] == 50
 
     run2 = Run.from_dict(data)

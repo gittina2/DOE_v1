@@ -4,7 +4,7 @@ from doe.models.factor import Factor
 from doe.models.response import Response
 from doe.models.design import Design, Run
 from doe.models.results import Results, ResultEntry
-from doe.analysis_computation import fit_linear_model
+from doe.statistics import fit_linear_model
 from doe.models.exceptions import (
     InsufficientObservationsError,
     NonEstimableModelError,
@@ -20,7 +20,6 @@ def create_sample_experiment_and_design():
         name="Yield Exp",
         factors=[f_temp, f_press],
         responses=[r_yield],
-        design_type="full_factorial",
         experiment_id="exp_test_001",
     )
     exp.validate()
@@ -98,7 +97,6 @@ def test_fit_linear_model_singular_matrix():
         name="Yield Exp",
         factors=[f_temp, f_press],
         responses=[r_yield],
-        design_type="full_factorial",
         experiment_id="exp_test_002",
     )
 
@@ -135,7 +133,6 @@ def test_fit_linear_model_categorical_factor():
         name="Cat Exp",
         factors=[f_cat, f_press],
         responses=[r_yield],
-        design_type="full_factorial",
         experiment_id="exp_cat_001",
     )
 

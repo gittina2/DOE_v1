@@ -100,7 +100,7 @@ def test_serialization_round_trip():
     assert d["upper_bound"] == 50.0
     assert d["unit"] == "C"
     assert d["metadata"] == {"precision": 0.1}
-    assert d["schema_version"] == "1.0"
+    assert d["schema_version"] == "1.1"
 
     f2 = Factor.from_dict(d)
     assert f1 == f2

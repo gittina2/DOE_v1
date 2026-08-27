@@ -14,9 +14,8 @@ def design_generated_state_file(tmp_path):
         name="CLI Results Test Exp",
         factors=[Factor(name="temp", type="continuous", lower_bound=100.0, upper_bound=200.0)],
         responses=[Response(name="yield", type="continuous")],
-        design_type="full_factorial",
     )
-    state = generate_design(exp)
+    state = generate_design(exp, design_type="full_factorial")
     state_file = tmp_path / "workflow_design.json"
     state.save_to_json(str(state_file))
     return state_file, state.design.runs

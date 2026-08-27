@@ -13,15 +13,13 @@ def test_cli_init_experiment_success(tmp_path, capsys):
     
     output_state_file = tmp_path / "workflow.json"
     
-    # Run CLI
+    # Run CLI — design-type and planned-runs are no longer on init-experiment
     args = [
         "init-experiment",
         "--name", "My Experiment",
         "--factors-csv", str(csv_file),
         "--response", "yield:continuous:g",
         "--response", "purity:continuous:%",
-        "--design-type", "full_factorial",
-        "--planned-runs", "16",
         "--description", "This is a test run",
         "--output", str(output_state_file)
     ]
@@ -42,8 +40,6 @@ def test_cli_init_experiment_success(tmp_path, capsys):
     assert state.experiment.name == "My Experiment"
     assert len(state.experiment.factors) == 2
     assert len(state.experiment.responses) == 2
-    assert state.experiment.design_type == "full_factorial"
-    assert state.experiment.planned_runs == 16
     assert state.experiment.description == "This is a test run"
 
 def test_cli_init_experiment_invalid_csv(tmp_path, capsys):
@@ -58,7 +54,6 @@ def test_cli_init_experiment_invalid_csv(tmp_path, capsys):
         "--name", "Bad Experiment",
         "--factors-csv", str(csv_file),
         "--response", "yield:continuous:g",
-        "--design-type", "full_factorial",
         "--output", str(output_state_file)
     ]
     
@@ -82,7 +77,6 @@ def test_cli_init_experiment_domain_validation_failure(tmp_path, capsys):
         "--name", "Bad Bounds Exp",
         "--factors-csv", str(csv_file),
         "--response", "yield:continuous:g",
-        "--design-type", "full_factorial",
         "--output", str(output_state_file)
     ]
     
@@ -108,7 +102,6 @@ def test_cli_init_experiment_invalid_response_format(tmp_path, capsys):
         "--factors-csv", str(csv_file),
         # Empty response string or unsupported format
         "--response", "",
-        "--design-type", "full_factorial",
         "--output", str(output_state_file)
     ]
     

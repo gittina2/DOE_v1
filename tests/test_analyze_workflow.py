@@ -20,7 +20,6 @@ def create_results_complete_workflow_state():
         name="Yield Exp",
         factors=[f_temp, f_press],
         responses=[r_yield],
-        design_type="full_factorial",
         experiment_id="exp_wf_001",
     )
     runs = [

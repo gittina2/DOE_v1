@@ -36,7 +36,7 @@ def test_serialization_round_trip():
     assert d["type"] == "continuous"
     assert d["unit"] == "kg"
     assert d["metadata"] == {"target": 100}
-    assert d["schema_version"] == "1.0"
+    assert d["schema_version"] == "1.1"
 
     r2 = Response.from_dict(d)
     assert r1 == r2

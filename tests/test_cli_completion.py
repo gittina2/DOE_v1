@@ -18,9 +18,8 @@ def results_complete_state_file(tmp_path):
         name="CLI Test Exp",
         factors=[f_temp, f_press],
         responses=[r_yield],
-        design_type="full_factorial",
     )
-    state1 = generate_design(state0)
+    state1 = generate_design(state0, design_type="full_factorial")
 
     runs = state1.design.runs
     entries = [
@@ -85,7 +84,6 @@ def test_cli_analyze_error(tmp_path, capsys):
         name="Empty Exp",
         factors=[f_temp],
         responses=[r_yield],
-        design_type="full_factorial",
     )
     state_file = tmp_path / "exp_created.json"
     state0.save_to_json(str(state_file))

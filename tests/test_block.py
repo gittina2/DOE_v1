@@ -146,7 +146,7 @@ def test_block_serialization_round_trip():
         "group": "batch-A"
     }
 
-    assert data["schema_version"] == "1.0"
+    assert data["schema_version"] == "1.1"
 
 
     block2 = Block.from_dict(data)
