@@ -1,0 +1,191 @@
+{
+    "schema_version": "1.1",
+    "step": "design_generated",
+    "audit": {
+        "action": "generate_design",
+        "experiment_id": "78efcfc9-5c66-4346-8631-9985f3e3b953",
+        "experiment_name": "fullfact_leardi",
+        "design_id": "64a37490-b6e3-4090-8bdf-00039cf6b631",
+        "design_type": "full_factorial"
+    },
+    "experiment": {
+        "schema_version": "1.1",
+        "experiment_id": "78efcfc9-5c66-4346-8631-9985f3e3b953",
+        "name": "fullfact_leardi",
+        "description": null,
+        "factors": [
+            {
+                "schema_version": "1.1",
+                "name": "A",
+                "type": "continuous",
+                "unit": "g",
+                "levels": null,
+                "lower_bound": 9.0,
+                "upper_bound": 11.0,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "name": "B",
+                "type": "continuous",
+                "unit": "g",
+                "levels": null,
+                "lower_bound": 3.6,
+                "upper_bound": 4.4,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "name": "C",
+                "type": "continuous",
+                "unit": "g",
+                "levels": null,
+                "lower_bound": 9.0,
+                "upper_bound": 11.0,
+                "metadata": null
+            }
+        ],
+        "responses": [
+            {
+                "schema_version": "1.1",
+                "name": "viscosity",
+                "type": "continuous",
+                "unit": null,
+                "metadata": null
+            }
+        ],
+        "metadata": null
+    },
+    "design": {
+        "schema_version": "1.1",
+        "design_id": "64a37490-b6e3-4090-8bdf-00039cf6b631",
+        "design_type": "full_factorial",
+        "experiment_ref": "78efcfc9-5c66-4346-8631-9985f3e3b953",
+        "runs": [
+            {
+                "schema_version": "1.1",
+                "run_id": "24a2e4fe-7de1-4997-b7e7-4af0d7374f29",
+                "run_number": 1,
+                "factor_values": {
+                    "A": 9.0,
+                    "B": 3.6,
+                    "C": 9.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "b494014b-17e1-4ce3-80ac-a6b56380abb1",
+                "run_number": 2,
+                "factor_values": {
+                    "A": 9.0,
+                    "B": 3.6,
+                    "C": 11.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "8cd32d13-1357-4d6f-a954-197a1af7664c",
+                "run_number": 3,
+                "factor_values": {
+                    "A": 9.0,
+                    "B": 4.4,
+                    "C": 9.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "b2a1ad54-57ad-4a60-8cbe-fa6ebf13c7f8",
+                "run_number": 4,
+                "factor_values": {
+                    "A": 9.0,
+                    "B": 4.4,
+                    "C": 11.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "e5469126-e832-401d-a1eb-a236e05766d4",
+                "run_number": 5,
+                "factor_values": {
+                    "A": 11.0,
+                    "B": 3.6,
+                    "C": 9.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "a04eee02-c00e-4516-9d04-9673465d7d0f",
+                "run_number": 6,
+                "factor_values": {
+                    "A": 11.0,
+                    "B": 3.6,
+                    "C": 11.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "e3f73726-d3b1-4178-81ce-f9b128ed901f",
+                "run_number": 7,
+                "factor_values": {
+                    "A": 11.0,
+                    "B": 4.4,
+                    "C": 9.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "5883c20e-ba1e-4aea-bcd9-6e06907cc7c6",
+                "run_number": 8,
+                "factor_values": {
+                    "A": 11.0,
+                    "B": 4.4,
+                    "C": 11.0
+                },
+                "metadata": null
+            }
+        ],
+        "factor_coding": [
+            {
+                "factor_ref": "A",
+                "method": "two_level",
+                "mapping": {
+                    "9.0": -1.0,
+                    "11.0": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "factor_ref": "B",
+                "method": "two_level",
+                "mapping": {
+                    "3.6": -1.0,
+                    "4.4": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "factor_ref": "C",
+                "method": "two_level",
+                "mapping": {
+                    "9.0": -1.0,
+                    "11.0": 1.0
+                },
+                "metadata": null
+            }
+        ],
+        "blocks": [],
+        "randomization": false,
+        "order": null,
+        "replications": null,
+        "metadata": null
+    },
+    "results": null,
+    "analysis": null
+}

@@ -43,15 +43,22 @@ def fit_quadratic_model(
     quadratic_terms: List[str] = []
 
     for factor in experiment.factors:
-        f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
-        if f_type == "continuous":
+        if design.is_factor_coded(factor.name):
             main_terms.append(factor.name)
-            quadratic_terms.append(f"{factor.name}^2")
-        elif f_type == "categorical":
-            if not factor.levels or len(factor.levels) < 2:
-                raise InvalidAnalysisInputError(f"Categorical factor '{factor.name}' must have at least 2 levels.")
-            for lvl in factor.levels[1:]:
-                main_terms.append(f"{factor.name}_{lvl}")
+            # Quadratic terms only apply to continuous variables
+            f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
+            if f_type == "continuous":
+                quadratic_terms.append(f"{factor.name}^2")
+        else:
+            f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
+            if f_type == "continuous":
+                main_terms.append(factor.name)
+                quadratic_terms.append(f"{factor.name}^2")
+            elif f_type == "categorical":
+                if not factor.levels or len(factor.levels) < 2:
+                    raise InvalidAnalysisInputError(f"Categorical factor '{factor.name}' must have at least 2 levels.")
+                for lvl in factor.levels[1:]:
+                    main_terms.append(f"{factor.name}_{lvl}")
 
     terms: List[str] = ["Intercept"] + main_terms + quadratic_terms
 
@@ -74,13 +81,21 @@ def fit_quadratic_model(
 
         main_vals: Dict[str, float] = {}
         for factor in experiment.factors:
-            f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
             val = run.factor_values.get(factor.name)
-            if f_type == "continuous":
-                main_vals[factor.name] = float(val)
-            elif f_type == "categorical":
-                for lvl in factor.levels[1:]:
-                    main_vals[f"{factor.name}_{lvl}"] = 1.0 if str(val) == str(lvl) else 0.0
+            if design.is_factor_coded(factor.name):
+                try:
+                    main_vals[factor.name] = design.get_coded_value(factor.name, val)
+                except Exception as e:
+                    raise InvalidAnalysisInputError(
+                        f"Failed to code value '{val}' for factor '{factor.name}': {e}"
+                    )
+            else:
+                f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
+                if f_type == "continuous":
+                    main_vals[factor.name] = float(val)
+                elif f_type == "categorical":
+                    for lvl in factor.levels[1:]:
+                        main_vals[f"{factor.name}_{lvl}"] = 1.0 if str(val) == str(lvl) else 0.0
 
         row: List[float] = [1.0]
         # Main effects

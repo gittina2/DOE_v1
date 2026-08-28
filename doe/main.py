@@ -207,7 +207,11 @@ def main(argv: Optional[List[str]] = None) -> None:
         "generate-design", help="Generate a design for an existing experiment"
     )
     design_parser.add_argument(
-        "--input", required=True, help="Path to the input WorkflowState JSON file"
+        "--state",
+        "--input", 
+        dest="input",
+        required=True, 
+        help="Path to the input WorkflowState JSON file"
     )
     design_parser.add_argument(
         "--design-type",

@@ -53,13 +53,9 @@ def test_generate_design_rejects_existing_design(sample_design_state):
 
 def test_generate_design_rejects_unknown_generator(sample_workflow_state):
 
-    sample_workflow_state.experiment.design_type = (
-        "fractional_factorial"
-    )
-
     with pytest.raises(
         UnsupportedDesignTypeError
     ):
-        generate_design(sample_workflow_state)        
+        generate_design(sample_workflow_state, design_type="unknown_design_type")
 
     

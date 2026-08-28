@@ -43,14 +43,17 @@ def fit_interaction_model(
     # Main terms
     main_terms: List[str] = []
     for factor in experiment.factors:
-        f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
-        if f_type == "continuous":
+        if design.is_factor_coded(factor.name):
             main_terms.append(factor.name)
-        elif f_type == "categorical":
-            if not factor.levels or len(factor.levels) < 2:
-                raise InvalidAnalysisInputError(f"Categorical factor '{factor.name}' must have at least 2 levels.")
-            for lvl in factor.levels[1:]:
-                main_terms.append(f"{factor.name}_{lvl}")
+        else:
+            f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
+            if f_type == "continuous":
+                main_terms.append(factor.name)
+            elif f_type == "categorical":
+                if not factor.levels or len(factor.levels) < 2:
+                    raise InvalidAnalysisInputError(f"Categorical factor '{factor.name}' must have at least 2 levels.")
+                for lvl in factor.levels[1:]:
+                    main_terms.append(f"{factor.name}_{lvl}")
 
     # Build interaction terms (pairwise)
     interaction_terms: List[Tuple[str, str]] = list(itertools.combinations(main_terms, 2))
@@ -78,13 +81,21 @@ def fit_interaction_model(
         # Main effect values map
         main_vals: Dict[str, float] = {}
         for factor in experiment.factors:
-            f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
             val = run.factor_values.get(factor.name)
-            if f_type == "continuous":
-                main_vals[factor.name] = float(val)
-            elif f_type == "categorical":
-                for lvl in factor.levels[1:]:
-                    main_vals[f"{factor.name}_{lvl}"] = 1.0 if str(val) == str(lvl) else 0.0
+            if design.is_factor_coded(factor.name):
+                try:
+                    main_vals[factor.name] = design.get_coded_value(factor.name, val)
+                except Exception as e:
+                    raise InvalidAnalysisInputError(
+                        f"Failed to code value '{val}' for factor '{factor.name}': {e}"
+                    )
+            else:
+                f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
+                if f_type == "continuous":
+                    main_vals[factor.name] = float(val)
+                elif f_type == "categorical":
+                    for lvl in factor.levels[1:]:
+                        main_vals[f"{factor.name}_{lvl}"] = 1.0 if str(val) == str(lvl) else 0.0
 
         row: List[float] = [1.0]
         # Main effects

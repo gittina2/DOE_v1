@@ -115,16 +115,19 @@ def fit_linear_model(
     terms: List[str] = ["Intercept"]    
 
     for factor in experiment.factors:
-        f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
-        if f_type == "continuous":
+        if design.is_factor_coded(factor.name):
             terms.append(factor.name)
-        elif f_type == "categorical":
-            if not factor.levels or len(factor.levels) < 2:
-                raise InvalidAnalysisInputError(f"Categorical factor '{factor.name}' must have at least 2 levels.")
-            for lvl in factor.levels[1:]:
-                terms.append(f"{factor.name}_{lvl}")
         else:
-            raise InvalidAnalysisInputError(f"Unsupported factor type '{f_type}'.")
+            f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
+            if f_type == "continuous":
+                terms.append(factor.name)
+            elif f_type == "categorical":
+                if not factor.levels or len(factor.levels) < 2:
+                    raise InvalidAnalysisInputError(f"Categorical factor '{factor.name}' must have at least 2 levels.")
+                for lvl in factor.levels[1:]:
+                    terms.append(f"{factor.name}_{lvl}")
+            else:
+                raise InvalidAnalysisInputError(f"Unsupported factor type '{f_type}'.")
         
     if len(terms) == 1:
         model_formula = f"{response_name} ~ 1"
@@ -153,18 +156,27 @@ def fit_linear_model(
 
         row: List[float] = [1.0]
         for factor in experiment.factors:
-            f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
             val = run.factor_values.get(factor.name)
-            if f_type == "continuous":
+            if design.is_factor_coded(factor.name):
                 try:
-                    row.append(float(val))
-                except (ValueError, TypeError):
+                    coded_val = design.get_coded_value(factor.name, val)
+                    row.append(coded_val)
+                except Exception as e:
                     raise InvalidAnalysisInputError(
-                        f"Invalid continuous factor value for '{factor.name}': {val}"
+                        f"Failed to code value '{val}' for factor '{factor.name}': {e}"
                     )
-            elif f_type == "categorical":
-                for lvl in factor.levels[1:]:
-                    row.append(1.0 if str(val) == str(lvl) else 0.0)
+            else:
+                f_type = factor.type.value if hasattr(factor.type, "value") else str(factor.type)
+                if f_type == "continuous":
+                    try:
+                        row.append(float(val))
+                    except (ValueError, TypeError):
+                        raise InvalidAnalysisInputError(
+                            f"Invalid continuous factor value for '{factor.name}': {val}"
+                        )
+                elif f_type == "categorical":
+                    for lvl in factor.levels[1:]:
+                        row.append(1.0 if str(val) == str(lvl) else 0.0)
 
         X.append(row)
         Y.append(y_val)

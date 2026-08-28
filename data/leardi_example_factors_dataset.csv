@@ -1,0 +1,4 @@
+name,type,unit,levels,lower_bound,upper_bound
+A,continuous,g,,9,11
+B,continuous,g,,3.6,4.4
+C,continuous,g,,9,11

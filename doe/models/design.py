@@ -205,6 +205,45 @@ class FactorCoding:
             metadata=data.get("metadata"),
         )
 
+    def code(self, value: Any) -> float:
+        """Transforms an experimental value to its coded level."""
+        # 1. Direct lookup in mapping
+        str_val = str(value)
+        if str_val in self.mapping:
+            return float(self.mapping[str_val])
+
+        # 2. Continuous interpolation/extrapolation for numeric values
+        try:
+            numeric_val = float(value)
+        except (ValueError, TypeError):
+            raise ValueError(
+                f"Value '{value}' is not numeric and not found in the mapping for factor '{self.factor_ref}'."
+            )
+
+        # Parse numeric mappings
+        numeric_mapping: List[Tuple[float, float]] = []
+        for k, v in self.mapping.items():
+            try:
+                numeric_mapping.append((float(k), float(v)))
+            except ValueError:
+                continue
+
+        if len(numeric_mapping) >= 2:
+            # Sort by original value
+            numeric_mapping.sort(key=lambda item: item[0])
+            x1, y1 = numeric_mapping[0]
+            x2, y2 = numeric_mapping[-1]
+            if abs(x2 - x1) > 1e-10:
+                coded_val = y1 + (y2 - y1) / (x2 - x1) * (numeric_val - x1)
+                return float(coded_val)
+            else:
+                return float(y1)
+
+        raise ValueError(
+            f"Unable to perform continuous coding for value '{value}' on factor '{self.factor_ref}': "
+            f"insufficient numeric mapping points in {self.mapping}."
+        )
+
 
 # ---------------------------------------------------------------------------
 # Design model – aggregate of runs (and optional blocks)
@@ -223,6 +262,19 @@ class Design:
     replications: Optional[int] = None
     metadata: Optional[Dict[str, Any]] = None
     schema_version: str = "1.1"
+
+    def is_factor_coded(self, factor_name: str) -> bool:
+        if self.factor_coding is None:
+            return False
+        return any(fc.factor_ref == factor_name for fc in self.factor_coding)
+
+    def get_coded_value(self, factor_name: str, value: Any) -> float:
+        if self.factor_coding is None:
+            raise ValueError("No factor coding defined in the design.")
+        for fc in self.factor_coding:
+            if fc.factor_ref == factor_name:
+                return fc.code(value)
+        raise ValueError(f"No factor coding found for factor '{factor_name}'.")
 
     def validate(self, experiment: Experiment) -> None:
         # Basic structural checks
