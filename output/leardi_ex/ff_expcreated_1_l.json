@@ -1,0 +1,60 @@
+{
+    "schema_version": "1.1",
+    "step": "experiment_created",
+    "audit": {
+        "action": "create_experiment",
+        "experiment_id": "b727a64a-efde-4dc1-b8a4-0260ca2c254c",
+        "experiment_name": "fullfact_leardinew"
+    },
+    "experiment": {
+        "schema_version": "1.1",
+        "experiment_id": "b727a64a-efde-4dc1-b8a4-0260ca2c254c",
+        "name": "fullfact_leardinew",
+        "description": null,
+        "factors": [
+            {
+                "schema_version": "1.1",
+                "name": "A",
+                "type": "continuous",
+                "unit": "g",
+                "levels": null,
+                "lower_bound": 9.0,
+                "upper_bound": 11.0,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "name": "B",
+                "type": "continuous",
+                "unit": "g",
+                "levels": null,
+                "lower_bound": 3.6,
+                "upper_bound": 4.4,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "name": "C",
+                "type": "continuous",
+                "unit": "g",
+                "levels": null,
+                "lower_bound": 9.0,
+                "upper_bound": 11.0,
+                "metadata": null
+            }
+        ],
+        "responses": [
+            {
+                "schema_version": "1.1",
+                "name": "viscosity",
+                "type": "continuous",
+                "unit": null,
+                "metadata": null
+            }
+        ],
+        "metadata": null
+    },
+    "design": null,
+    "results": null,
+    "analysis": null
+}

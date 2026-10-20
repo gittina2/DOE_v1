@@ -1,0 +1,232 @@
+{
+    "schema_version": "1.1",
+    "step": "analysis_created",
+    "audit": {
+        "action": "generate_design",
+        "experiment_id": "82b6cb2c-043f-4027-850a-e0f807abc67f",
+        "experiment_name": "fullfact1_new",
+        "design_id": "9a9ee39d-346b-46cc-ba07-ff52fc34c159",
+        "design_type": "full_factorial",
+        "inserted_results_count": 4,
+        "total_results_count": 4,
+        "transition": "results_complete -> analysis_created",
+        "analysis_id": "ana_18e28299",
+        "model_type": "linear"
+    },
+    "experiment": {
+        "schema_version": "1.1",
+        "experiment_id": "82b6cb2c-043f-4027-850a-e0f807abc67f",
+        "name": "fullfact1_new",
+        "description": null,
+        "factors": [
+            {
+                "schema_version": "1.1",
+                "name": "T",
+                "type": "continuous",
+                "unit": "C",
+                "levels": null,
+                "lower_bound": 20.0,
+                "upper_bound": 60.0,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "name": "conc_base",
+                "type": "continuous",
+                "unit": null,
+                "levels": null,
+                "lower_bound": 1.0,
+                "upper_bound": 2.0,
+                "metadata": null
+            }
+        ],
+        "responses": [
+            {
+                "schema_version": "1.1",
+                "name": "resa",
+                "type": "continuous",
+                "unit": null,
+                "metadata": null
+            }
+        ],
+        "metadata": null
+    },
+    "design": {
+        "schema_version": "1.1",
+        "design_id": "9a9ee39d-346b-46cc-ba07-ff52fc34c159",
+        "design_type": "full_factorial",
+        "experiment_ref": "82b6cb2c-043f-4027-850a-e0f807abc67f",
+        "runs": [
+            {
+                "schema_version": "1.1",
+                "run_id": "1f02320c-0f4a-485d-b629-18b1e611b96f",
+                "run_number": 1,
+                "factor_values": {
+                    "T": 20.0,
+                    "conc_base": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "2b159816-fd40-45d4-ac3c-be61f604fe11",
+                "run_number": 2,
+                "factor_values": {
+                    "T": 20.0,
+                    "conc_base": 2.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "1c8de4a9-af8a-4952-b8ef-a08f4fc170d9",
+                "run_number": 3,
+                "factor_values": {
+                    "T": 60.0,
+                    "conc_base": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "c9c1de28-41b3-4665-9f88-5d0d7346f961",
+                "run_number": 4,
+                "factor_values": {
+                    "T": 60.0,
+                    "conc_base": 2.0
+                },
+                "metadata": null
+            }
+        ],
+        "factor_coding": [
+            {
+                "factor_ref": "T",
+                "method": "two_level",
+                "mapping": {
+                    "20.0": -1.0,
+                    "60.0": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "factor_ref": "conc_base",
+                "method": "two_level",
+                "mapping": {
+                    "1.0": -1.0,
+                    "2.0": 1.0
+                },
+                "metadata": null
+            }
+        ],
+        "blocks": [],
+        "randomization": false,
+        "order": null,
+        "replications": null,
+        "metadata": null
+    },
+    "results": {
+        "schema_version": "1.1",
+        "results_id": "res_c504907a",
+        "design_ref": "9a9ee39d-346b-46cc-ba07-ff52fc34c159",
+        "entries": [
+            {
+                "run_ref": "1f02320c-0f4a-485d-b629-18b1e611b96f",
+                "values": {
+                    "resa": 10
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "2b159816-fd40-45d4-ac3c-be61f604fe11",
+                "values": {
+                    "resa": 2
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "1c8de4a9-af8a-4952-b8ef-a08f4fc170d9",
+                "values": {
+                    "resa": 5
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "c9c1de28-41b3-4665-9f88-5d0d7346f961",
+                "values": {
+                    "resa": 3
+                },
+                "status": "complete",
+                "metadata": null
+            }
+        ],
+        "completeness": "complete",
+        "metadata": null
+    },
+    "analysis": {
+        "schema_version": "1.1",
+        "analysis_id": "ana_18e28299",
+        "model_type": "linear",
+        "formula": "resa ~ T + conc_base",
+        "terms": [
+            "Intercept",
+            "T",
+            "conc_base"
+        ],
+        "experiment_ref": "82b6cb2c-043f-4027-850a-e0f807abc67f",
+        "design_ref": "9a9ee39d-346b-46cc-ba07-ff52fc34c159",
+        "results_ref": "res_c504907a",
+        "coefficients": {
+            "Intercept": 5.0,
+            "T": -1.0,
+            "conc_base": -2.5
+        },
+        "anova_table": [
+            {
+                "source": "Model",
+                "ss": 29.0,
+                "df": 2,
+                "ms": 14.5,
+                "f_value": 1.611111,
+                "p_value": 0.486664
+            },
+            {
+                "source": "Residuals",
+                "ss": 9.0,
+                "df": 1,
+                "ms": 9.0,
+                "f_value": null,
+                "p_value": null
+            },
+            {
+                "source": "Total",
+                "ss": 38.0,
+                "df": 3,
+                "ms": null,
+                "f_value": null,
+                "p_value": null
+            }
+        ],
+        "p_values": {
+            "Intercept": 0.185547,
+            "T": 0.625666,
+            "conc_base": 0.344042
+        },
+        "r_squared": 0.763158,
+        "adjusted_r_squared": 0.289474,
+        "residuals": [
+            1.5,
+            -1.5,
+            -1.5,
+            1.5
+        ],
+        "diagnostics": {
+            "response_variable": "resa",
+            "n_observations": 4,
+            "n_parameters": 3
+        },
+        "metadata": null
+    }
+}

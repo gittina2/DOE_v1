@@ -9,7 +9,7 @@ import uuid
 from typing import Any, Dict, List, Tuple
 
 from doe.designs.generator_interface import DesignGenerator
-from doe.designs.full_factorial import (
+from doe.designs.utils import (
     generate_factorial_combinations,
     combinations_to_runs,
     generate_factor_codings,
