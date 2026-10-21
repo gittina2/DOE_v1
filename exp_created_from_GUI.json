@@ -1,0 +1,60 @@
+{
+    "schema_version": "1.1",
+    "step": "experiment_created",
+    "audit": {
+        "action": "create_experiment",
+        "experiment_id": "a150694a-8975-4497-9d0d-7c0e8b8d6f76",
+        "experiment_name": "leardi_experiment"
+    },
+    "experiment": {
+        "schema_version": "1.1",
+        "experiment_id": "a150694a-8975-4497-9d0d-7c0e8b8d6f76",
+        "name": "leardi_experiment",
+        "description": "exp di prova basato sul paper di leardi nostro signore",
+        "factors": [
+            {
+                "schema_version": "1.1",
+                "name": "A",
+                "type": "continuous",
+                "unit": "g",
+                "levels": null,
+                "lower_bound": 9.0,
+                "upper_bound": 11.0,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "name": "B",
+                "type": "continuous",
+                "unit": "g",
+                "levels": null,
+                "lower_bound": 3.6,
+                "upper_bound": 4.4,
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "name": "C",
+                "type": "continuous",
+                "unit": "g",
+                "levels": null,
+                "lower_bound": 9.0,
+                "upper_bound": 11.0,
+                "metadata": null
+            }
+        ],
+        "responses": [
+            {
+                "schema_version": "1.1",
+                "name": "viscosity",
+                "type": "continuous",
+                "unit": null,
+                "metadata": null
+            }
+        ],
+        "metadata": null
+    },
+    "design": null,
+    "results": null,
+    "analysis": null
+}
