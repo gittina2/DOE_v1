@@ -1,4 +1,4 @@
-﻿"""Main application window for DOE Toolkit."""
+"""Main application window for DOE Toolkit."""
 import os
 from typing import Optional
 
@@ -21,8 +21,13 @@ from PySide6.QtWidgets import (
 )
 
 from doe.gui.session import GuiSession
-from doe.gui.views.experiment_view import ExperimentView
-from doe.gui.views.placeholder_view import PlaceholderView
+from doe.gui.views import (
+    ExperimentView,
+    DesignView,
+    ResultsView,
+    AnalysisView,
+    ReportView,
+)
 from doe.models import (
     SchemaVersionMismatchError,
     WorkflowStateMismatchError,
@@ -238,40 +243,20 @@ class MainWindow(QMainWindow):
         self.stack.addWidget(self.experiment_view)
 
         # Index 1: Design View
-        design_view = PlaceholderView(
-            section_title="Design",
-            description="Experimental design generation (Full Factorial, Fractional Factorial) will be configured and generated here.",
-            upcoming_features="Step 2 of the DOE workflow: build design matrices, view coded levels, and randomize runs.",
-            parent=self,
-        )
-        self.stack.addWidget(design_view)
+        self.design_view = DesignView(self.session, self)
+        self.stack.addWidget(self.design_view)
 
         # Index 2: Results View
-        results_view = PlaceholderView(
-            section_title="Results",
-            description="Experimental response data entry, inspection, and CSV result importing will be managed here.",
-            upcoming_features="Step 3 of the DOE workflow: record measurement values and validate completeness.",
-            parent=self,
-        )
-        self.stack.addWidget(results_view)
+        self.results_view = ResultsView(self.session, self)
+        self.stack.addWidget(self.results_view)
 
         # Index 3: Analysis View
-        analysis_view = PlaceholderView(
-            section_title="Analysis",
-            description="Statistical regression modeling (Linear, Interaction, Quadratic) and ANOVA computations will be displayed here.",
-            upcoming_features="Step 4 of the DOE workflow: evaluate coefficients, p-values, R², and model diagnostics.",
-            parent=self,
-        )
-        self.stack.addWidget(analysis_view)
+        self.analysis_view = AnalysisView(self.session, self)
+        self.stack.addWidget(self.analysis_view)
 
         # Index 4: Report View
-        report_view = PlaceholderView(
-            section_title="Report",
-            description="Structured Markdown report generation, viewing, and export will be handled here.",
-            upcoming_features="Step 5 of the DOE workflow: export publication-ready reports summarizing the complete experimental pipeline.",
-            parent=self,
-        )
-        self.stack.addWidget(report_view)
+        self.report_view = ReportView(self.session, self)
+        self.stack.addWidget(self.report_view)
 
     def _init_statusbar(self) -> None:
         statusbar = QStatusBar(self)

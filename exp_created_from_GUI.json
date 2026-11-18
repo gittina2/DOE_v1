@@ -1,10 +1,21 @@
 {
     "schema_version": "1.1",
-    "step": "experiment_created",
+    "step": "report_generated",
     "audit": {
-        "action": "create_experiment",
+        "action": "generate_design",
         "experiment_id": "a150694a-8975-4497-9d0d-7c0e8b8d6f76",
-        "experiment_name": "leardi_experiment"
+        "experiment_name": "leardi_experiment",
+        "design_id": "0d3fe7c2-364c-43fe-8db6-e23c0c244d2f",
+        "design_type": "full_factorial",
+        "source": "manual_entry",
+        "inserted_results_count": 8,
+        "total_results_count": 8,
+        "transition": "analysis_created -> report_generated",
+        "analysis_id": "ana_58f9a068",
+        "model_type": "linear",
+        "response_variable": "viscosity",
+        "report_format": "markdown",
+        "output_path": "C:/Users/marti/Documents/DOE_v1/leardi_experiment_report.md"
     },
     "experiment": {
         "schema_version": "1.1",
@@ -54,7 +65,278 @@
         ],
         "metadata": null
     },
-    "design": null,
-    "results": null,
-    "analysis": null
+    "design": {
+        "schema_version": "1.1",
+        "design_id": "0d3fe7c2-364c-43fe-8db6-e23c0c244d2f",
+        "design_type": "full_factorial",
+        "experiment_ref": "a150694a-8975-4497-9d0d-7c0e8b8d6f76",
+        "runs": [
+            {
+                "schema_version": "1.1",
+                "run_id": "aa2d89dd-b460-4f95-8da0-dd070ba8de4d",
+                "run_number": 1,
+                "factor_values": {
+                    "A": 9.0,
+                    "B": 3.6,
+                    "C": 9.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "04122e81-f638-4317-b9b0-f59cb27f2651",
+                "run_number": 2,
+                "factor_values": {
+                    "A": 9.0,
+                    "B": 3.6,
+                    "C": 11.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "5040b195-1a10-4e41-ab6e-51d15cdd8924",
+                "run_number": 3,
+                "factor_values": {
+                    "A": 9.0,
+                    "B": 4.4,
+                    "C": 9.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "5e2dfb88-8dee-4907-9655-231f89315cbd",
+                "run_number": 4,
+                "factor_values": {
+                    "A": 9.0,
+                    "B": 4.4,
+                    "C": 11.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "7dfa6aef-9d00-440e-b314-7bbc9c141a02",
+                "run_number": 5,
+                "factor_values": {
+                    "A": 11.0,
+                    "B": 3.6,
+                    "C": 9.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "84714627-fb75-43b5-a9ff-50e8935735f1",
+                "run_number": 6,
+                "factor_values": {
+                    "A": 11.0,
+                    "B": 3.6,
+                    "C": 11.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "b9fd7297-4dcc-47d6-9584-99d22ab7f110",
+                "run_number": 7,
+                "factor_values": {
+                    "A": 11.0,
+                    "B": 4.4,
+                    "C": 9.0
+                },
+                "metadata": null
+            },
+            {
+                "schema_version": "1.1",
+                "run_id": "378a0254-c2a9-47f6-a393-9793a74f002e",
+                "run_number": 8,
+                "factor_values": {
+                    "A": 11.0,
+                    "B": 4.4,
+                    "C": 11.0
+                },
+                "metadata": null
+            }
+        ],
+        "factor_coding": [
+            {
+                "factor_ref": "A",
+                "method": "two_level",
+                "mapping": {
+                    "9.0": -1.0,
+                    "11.0": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "factor_ref": "B",
+                "method": "two_level",
+                "mapping": {
+                    "3.6": -1.0,
+                    "4.4": 1.0
+                },
+                "metadata": null
+            },
+            {
+                "factor_ref": "C",
+                "method": "two_level",
+                "mapping": {
+                    "9.0": -1.0,
+                    "11.0": 1.0
+                },
+                "metadata": null
+            }
+        ],
+        "blocks": [],
+        "randomization": false,
+        "order": null,
+        "replications": null,
+        "metadata": null
+    },
+    "results": {
+        "schema_version": "1.1",
+        "results_id": "res_8c299430",
+        "design_ref": "0d3fe7c2-364c-43fe-8db6-e23c0c244d2f",
+        "entries": [
+            {
+                "run_ref": "aa2d89dd-b460-4f95-8da0-dd070ba8de4d",
+                "values": {
+                    "viscosity": 51.8
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "04122e81-f638-4317-b9b0-f59cb27f2651",
+                "values": {
+                    "viscosity": 50.2
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "5040b195-1a10-4e41-ab6e-51d15cdd8924",
+                "values": {
+                    "viscosity": 51
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "5e2dfb88-8dee-4907-9655-231f89315cbd",
+                "values": {
+                    "viscosity": 52
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "7dfa6aef-9d00-440e-b314-7bbc9c141a02",
+                "values": {
+                    "viscosity": 51.6
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "84714627-fb75-43b5-a9ff-50e8935735f1",
+                "values": {
+                    "viscosity": 46.6
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "b9fd7297-4dcc-47d6-9584-99d22ab7f110",
+                "values": {
+                    "viscosity": 42.4
+                },
+                "status": "complete",
+                "metadata": null
+            },
+            {
+                "run_ref": "378a0254-c2a9-47f6-a393-9793a74f002e",
+                "values": {
+                    "viscosity": 50
+                },
+                "status": "complete",
+                "metadata": null
+            }
+        ],
+        "completeness": "complete",
+        "metadata": null
+    },
+    "analysis": {
+        "schema_version": "1.1",
+        "analysis_id": "ana_58f9a068",
+        "model_type": "linear",
+        "formula": "viscosity ~ A + B + C",
+        "terms": [
+            "Intercept",
+            "A",
+            "B",
+            "C"
+        ],
+        "experiment_ref": "a150694a-8975-4497-9d0d-7c0e8b8d6f76",
+        "design_ref": "0d3fe7c2-364c-43fe-8db6-e23c0c244d2f",
+        "results_ref": "res_8c299430",
+        "coefficients": {
+            "Intercept": 49.45,
+            "A": -1.8,
+            "B": -0.6,
+            "C": 0.25
+        },
+        "anova_table": [
+            {
+                "source": "Model",
+                "ss": 29.3,
+                "df": 3,
+                "ms": 9.766667,
+                "f_value": 0.806496,
+                "p_value": 0.552351
+            },
+            {
+                "source": "Residuals",
+                "ss": 48.44,
+                "df": 4,
+                "ms": 12.11,
+                "f_value": null,
+                "p_value": null
+            },
+            {
+                "source": "Total",
+                "ss": 77.74,
+                "df": 7,
+                "ms": null,
+                "f_value": null,
+                "p_value": null
+            }
+        ],
+        "p_values": {
+            "Intercept": 2e-06,
+            "A": 0.217297,
+            "B": 0.651307,
+            "C": 0.848901
+        },
+        "r_squared": 0.376897,
+        "adjusted_r_squared": 0.0,
+        "residuals": [
+            0.2,
+            -1.9,
+            0.6,
+            1.1,
+            3.6,
+            -1.9,
+            -4.4,
+            2.7
+        ],
+        "diagnostics": {
+            "response_variable": "viscosity",
+            "n_observations": 8,
+            "n_parameters": 4
+        },
+        "metadata": null
+    }
 }

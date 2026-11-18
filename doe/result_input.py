@@ -1,3 +1,5 @@
+import csv
+import os
 from typing import List, Optional, Dict, Any
 from doe.models.workflow_state import WorkflowState
 from doe.models.results import ResultEntry, Results
@@ -137,3 +139,31 @@ def insert_results(
     )
 
     return new_state
+
+
+def export_results_template_csv(design: Any, experiment: Any, file_path: str) -> None:
+    """Export a blank results CSV template with run numbers, run IDs, factor settings, and response column headers."""
+    if not design or not getattr(design, "runs", None):
+        raise ValueError("Design contains no runs to generate a template.")
+    if not experiment or not getattr(experiment, "responses", None):
+        raise ValueError("Experiment contains no responses defined.")
+
+    dir_name = os.path.dirname(os.path.abspath(file_path))
+    if dir_name:
+        os.makedirs(dir_name, exist_ok=True)
+
+    factor_names = [f.name for f in experiment.factors] if hasattr(experiment, "factors") else []
+    response_names = [r.name for r in experiment.responses]
+    header = ["run_number", "run_id"] + factor_names + response_names
+
+    with open(file_path, mode="w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        for run in design.runs:
+            row = (
+                [run.run_number, run.run_id]
+                + [run.factor_values.get(fname, "") for fname in factor_names]
+                + ["" for _ in response_names]
+            )
+            writer.writerow(row)
+

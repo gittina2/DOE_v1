@@ -25,6 +25,7 @@ _MODEL_FIBERS = {
 def analyze_experiment(
     state: WorkflowState,
     model_type: str = "linear",
+    response_name: Optional[str] = None,
 ) -> WorkflowState:
     state.validate()
 
@@ -54,15 +55,21 @@ def analyze_experiment(
             f"Unsupported model_type: '{model_type}'. Supported: {list(_MODEL_FIBERS.keys())}"
         )
 
-    analysis_obj = model_func(state.experiment, state.design, state.results)
+    analysis_obj = model_func(
+        state.experiment, state.design, state.results, response_name=response_name
+    )
+
+    audit_payload = {
+        "analysis_id": analysis_obj.analysis_id,
+        "model_type": model_type,
+    }
+    if response_name:
+        audit_payload["response_variable"] = response_name
 
     new_state = state.transition_to(
         "analysis_created",
         analysis=analysis_obj,
-        audit={
-            "analysis_id": analysis_obj.analysis_id,
-            "model_type": model_type,
-        },
+        audit=audit_payload,
     )
 
     return new_state

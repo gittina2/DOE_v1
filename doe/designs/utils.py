@@ -5,7 +5,9 @@ generation, run creation, and factor coding generation across different design
 generators.
 """
 
+import csv
 import itertools
+import os
 from typing import Any, Dict, List, Tuple
 
 from doe.models.experiment import Experiment
@@ -137,3 +139,84 @@ def generate_factor_codings(experiment: Experiment) -> List[FactorCoding]:
                 )
             )
     return codings
+
+
+def export_design_to_csv(design: Any, experiment: Any, file_path: str) -> None:
+    """Export the exact runs stored in Design to a user-facing CSV file."""
+    if not design or not getattr(design, "runs", None):
+        raise ValueError("Design contains no runs to export.")
+
+    dir_name = os.path.dirname(os.path.abspath(file_path))
+    if dir_name:
+        os.makedirs(dir_name, exist_ok=True)
+
+    factor_names = [f.name for f in experiment.factors] if experiment and hasattr(experiment, "factors") else []
+
+    with open(file_path, mode="w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        header = ["Run Number", "Run ID"] + factor_names
+        writer.writerow(header)
+        for run in design.runs:
+            row = [run.run_number, run.run_id] + [run.factor_values.get(fname, "") for fname in factor_names]
+            writer.writerow(row)
+
+
+def export_design_to_excel(design: Any, experiment: Any, file_path: str) -> None:
+    """Export the exact runs stored in Design to an Excel spreadsheet."""
+    if not design or not getattr(design, "runs", None):
+        raise ValueError("Design contains no runs to export.")
+
+    dir_name = os.path.dirname(os.path.abspath(file_path))
+    if dir_name:
+        os.makedirs(dir_name, exist_ok=True)
+
+    factor_names = [f.name for f in experiment.factors] if experiment and hasattr(experiment, "factors") else []
+    header = ["Run Number", "Run ID"] + factor_names
+
+    try:
+        import openpyxl
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Design Matrix"
+        ws.append(header)
+        for run in design.runs:
+            row = [run.run_number, run.run_id] + [run.factor_values.get(fname, "") for fname in factor_names]
+            ws.append(row)
+        wb.save(file_path)
+    except ImportError:
+        # Fallback to XML Spreadsheet 2003 format natively opened by Excel
+        xml_lines = [
+            '<?xml version="1.0"?>',
+            '<?mso-application progid="Excel.Sheet"?>',
+            '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"',
+            ' xmlns:o="urn:schemas-microsoft-com:office:office"',
+            ' xmlns:x="urn:schemas-microsoft-com:office:excel"',
+            ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">',
+            ' <Worksheet ss:Name="Design Matrix">',
+            '  <Table>',
+            '   <Row>',
+        ]
+        for h in header:
+            xml_lines.append(f'    <Cell><Data ss:Type="String">{h}</Data></Cell>')
+        xml_lines.append('   </Row>')
+
+        for run in design.runs:
+            xml_lines.append('   <Row>')
+            xml_lines.append(f'    <Cell><Data ss:Type="Number">{run.run_number}</Data></Cell>')
+            xml_lines.append(f'    <Cell><Data ss:Type="String">{run.run_id}</Data></Cell>')
+            for fname in factor_names:
+                val = run.factor_values.get(fname, "")
+                if isinstance(val, (int, float)):
+                    xml_lines.append(f'    <Cell><Data ss:Type="Number">{val}</Data></Cell>')
+                else:
+                    xml_lines.append(f'    <Cell><Data ss:Type="String">{val}</Data></Cell>')
+            xml_lines.append('   </Row>')
+
+        xml_lines.extend([
+            '  </Table>',
+            ' </Worksheet>',
+            '</Workbook>',
+        ])
+        with open(file_path, mode="w", encoding="utf-8") as f:
+            f.write("\n".join(xml_lines))
+
