@@ -23,6 +23,14 @@ from PySide6.QtWidgets import (
 from doe.gui.session import GuiSession
 from doe.analysis_computation import analyze_experiment
 from doe.models import Analysis, DoeError, DomainValidationError
+from doe.gui.styles import (
+    get_header_style,
+    get_formula_frame_style,
+    get_primary_button_style,
+    get_summary_card_style,
+    get_eligibility_banner_style,
+    colors,
+)
 
 
 class AnalysisView(QWidget):
@@ -59,7 +67,7 @@ class AnalysisView(QWidget):
 
         # -- Section Header --
         header = QLabel("Statistical Analysis & Modeling", content)
-        header.setStyleSheet("font-size: 20px; font-weight: bold; color: #1a1a1a;")
+        header.setStyleSheet(get_header_style())
         self._content_layout.addWidget(header)
 
         # -- Model Configuration Panel --
@@ -93,24 +101,16 @@ class AnalysisView(QWidget):
 
         # Formula Preview Frame
         self.formula_frame = QFrame(self.config_group)
-        self.formula_frame.setStyleSheet(
-            """
-            QFrame {
-                background-color: #f8fafc;
-                border: 1px solid #e2e8f0;
-                border-radius: 4px;
-                padding: 6px 12px;
-            }
-            """
-        )
+        self.formula_frame.setObjectName("formulaFrame")
+        self.formula_frame.setStyleSheet(get_formula_frame_style())
         formula_layout = QHBoxLayout(self.formula_frame)
         formula_layout.setContentsMargins(4, 4, 4, 4)
         formula_hdr = QLabel("Formula Preview:", self.formula_frame)
-        formula_hdr.setStyleSheet("font-weight: bold; color: #475569; min-width: 130px;")
+        formula_hdr.setStyleSheet(f"font-weight: bold; color: {colors.FORMULA_HDR_TEXT}; min-width: 130px;")
         formula_layout.addWidget(formula_hdr)
 
         self.formula_label = QLabel(self.formula_frame)
-        self.formula_label.setStyleSheet("font-family: monospace; font-size: 13px; color: #0f172a;")
+        self.formula_label.setStyleSheet(f"font-family: monospace; font-size: 13px; color: {colors.FORMULA_TEXT};")
         formula_layout.addWidget(self.formula_label, 1)
         config_layout.addWidget(self.formula_frame)
 
@@ -130,27 +130,12 @@ class AnalysisView(QWidget):
         self.run_btn.setMinimumHeight(38)
         self.run_btn.setMinimumWidth(200)
         self.run_btn.setStyleSheet(
-            """
-            QPushButton {
-                background-color: #2563eb;
-                color: white;
-                font-size: 14px;
-                font-weight: bold;
-                border: none;
-                border-radius: 6px;
-                padding: 8px 24px;
-            }
-            QPushButton:hover {
-                background-color: #1d4ed8;
-            }
-            QPushButton:pressed {
-                background-color: #1e40af;
-            }
-            QPushButton:disabled {
-                background-color: #94a3b8;
-                color: #e2e8f0;
-            }
-            """
+            get_primary_button_style(
+                font_size="14px",
+                padding="8px 24px",
+                border_radius="6px",
+                include_disabled=True,
+            )
         )
         self.run_btn.clicked.connect(self._on_run_analysis)
         run_btn_layout.addWidget(self.run_btn)
@@ -169,20 +154,12 @@ class AnalysisView(QWidget):
         self.summary_tab = QWidget()
         summary_tab_layout = QVBoxLayout(self.summary_tab)
         self.summary_card = QFrame(self.summary_tab)
-        self.summary_card.setStyleSheet(
-            """
-            QFrame {
-                background-color: #f8fafc;
-                border: 1px solid #cbd5e1;
-                border-radius: 6px;
-                padding: 16px;
-            }
-            """
-        )
+        self.summary_card.setObjectName("summaryCard")
+        self.summary_card.setStyleSheet(get_summary_card_style())
         card_layout = QVBoxLayout(self.summary_card)
         self.summary_card_label = QLabel(self.summary_card)
         self.summary_card_label.setTextFormat(Qt.RichText)
-        self.summary_card_label.setStyleSheet("font-size: 13px; line-height: 1.6;")
+        self.summary_card_label.setStyleSheet(f"font-size: 13px; line-height: 1.6; color: {colors.OVERVIEW_TEXT};")
         card_layout.addWidget(self.summary_card_label)
         summary_tab_layout.addWidget(self.summary_card)
         summary_tab_layout.addStretch(1)
@@ -275,8 +252,8 @@ class AnalysisView(QWidget):
             return (
                 False,
                 "<b>No Experimental Design:</b> Please generate a design in the <i>Design</i> section first.",
-                "#b45309",
-                "#fef3c7",
+                colors.WARNING_BORDER,
+                colors.WARNING_BG,
             )
 
         if not results or getattr(results, "completeness", "") != "complete":
@@ -286,8 +263,8 @@ class AnalysisView(QWidget):
                 False,
                 f"<b>Incomplete Results:</b> Regression modeling requires all runs to be recorded. "
                 f"Current progress: {recorded} of {total} runs complete. Please record all responses in the <i>Results</i> section.",
-                "#b45309",
-                "#fef3c7",
+                colors.WARNING_BORDER,
+                colors.WARNING_BG,
             )
 
         model_type = self.model_type_combo.currentData()
@@ -311,8 +288,8 @@ class AnalysisView(QWidget):
                     "<b>Non-Estimable Model (Quadratic):</b> Quadratic models require at least 3 distinct levels "
                     "per continuous factor (such as center points). The current 2-level factorial design matrix is "
                     "rank-deficient for quadratic terms.",
-                    "#dc2626",
-                    "#fee2e2",
+                    colors.BLOCKED_BORDER,
+                    colors.BLOCKED_BG,
                 )
 
         # 2. Interaction Model Degrees of Freedom Check
@@ -324,8 +301,8 @@ class AnalysisView(QWidget):
                     f"<b>Insufficient Observations:</b> The interaction model requires {num_params} parameters, "
                     f"but the design only contains {N} runs ($N ≤ p$). At least {num_params + 1} runs are required "
                     f"to have residual degrees of freedom.",
-                    "#dc2626",
-                    "#fee2e2",
+                    colors.BLOCKED_BORDER,
+                    colors.BLOCKED_BG,
                 )
 
         # 3. Linear Model Check
@@ -336,8 +313,8 @@ class AnalysisView(QWidget):
                     False,
                     f"<b>Insufficient Observations:</b> Linear model requires {num_params} parameters, "
                     f"but only {N} runs are available ($N ≤ p$).",
-                    "#dc2626",
-                    "#fee2e2",
+                    colors.BLOCKED_BORDER,
+                    colors.BLOCKED_BG,
                 )
 
         # Eligible
@@ -347,8 +324,8 @@ class AnalysisView(QWidget):
             True,
             f"<b>Model Estimable:</b> Design and data satisfy all mathematical requirements "
             f"($N = {N}$ observations, $p = {p_est}$ terms, $df_{{\\text{{res}}}} = {df_res}$).",
-            "#16a34a",
-            "#dcfce7",
+            colors.ELIGIBLE_BORDER,
+            colors.ELIGIBLE_BG,
         )
 
     def _update_eligibility(self) -> None:
@@ -375,9 +352,7 @@ class AnalysisView(QWidget):
         self.formula_label.setText(formula_text)
 
         is_eligible, message, text_color, bg_color = self._check_model_eligibility()
-        self.eligibility_frame.setStyleSheet(
-            f"QFrame {{ background-color: {bg_color}; border: 1px solid {text_color}; border-radius: 6px; padding: 6px; }}"
-        )
+        self.eligibility_frame.setStyleSheet(get_eligibility_banner_style(bg_color, text_color))
         self.eligibility_label.setStyleSheet(f"color: {text_color}; font-size: 13px;")
         self.eligibility_label.setText(message)
         self.run_btn.setEnabled(is_eligible)
@@ -422,11 +397,11 @@ class AnalysisView(QWidget):
             sig_item = QTableWidgetItem(sig_text)
             sig_item.setTextAlignment(Qt.AlignCenter)
             if p_val is not None and p_val < 0.05:
-                sig_item.setForeground(Qt.darkGreen)
+                sig_item.setForeground(colors.TABLE_SIG_TERM_FG)
                 term_item.setFont(self.font())
-                term_item.setBackground(Qt.cyan if term != "Intercept" else Qt.white)
+                term_item.setBackground(colors.TABLE_SIG_TERM_BG if term != "Intercept" else colors.TABLE_WHITE_BG)
             else:
-                sig_item.setForeground(Qt.darkGray)
+                sig_item.setForeground(colors.TABLE_NONSIG_TERM_FG)
 
             coded_item = QTableWidgetItem("Yes" if term != "Intercept" else "-")
             coded_item.setTextAlignment(Qt.AlignCenter)

@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 )
 
 from doe.models import Response, DomainValidationError, DoeError
+from doe.gui.styles import colors
 
 
 class ResponseDialog(QDialog):
@@ -48,7 +49,7 @@ class ResponseDialog(QDialog):
 
         # Type info label (read-only, always continuous)
         type_label = QLabel("Type: Continuous", self)
-        type_label.setStyleSheet("color: #666666; font-style: italic;")
+        type_label.setStyleSheet(f"color: {colors.MUTED_TEXT}; font-style: italic;")
         layout.addRow("", type_label)
 
         self.button_box = QDialogButtonBox(

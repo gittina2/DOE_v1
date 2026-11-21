@@ -34,6 +34,7 @@ from doe.models import (
     DomainValidationError,
     DoeError,
 )
+from doe.gui.styles import get_sidebar_stylesheet
 
 
 class MainWindow(QMainWindow):
@@ -127,63 +128,7 @@ class MainWindow(QMainWindow):
         sidebar = QWidget(self)
         sidebar.setObjectName("sidebar")
         sidebar.setFixedWidth(230)
-        sidebar.setStyleSheet(
-            """
-            QWidget#sidebar {
-                background-color: #1e293b;
-                border-right: 1px solid #334155;
-            }
-            QLabel#appTitle {
-                color: #ffffff;
-                font-size: 18px;
-                font-weight: bold;
-                padding: 16px 12px 6px 12px;
-            }
-            QLabel#appSubtitle {
-                color: #94a3b8;
-                font-size: 11px;
-                padding: 0 12px 16px 12px;
-            }
-            QPushButton.navButton {
-                background-color: transparent;
-                color: #cbd5e1;
-                font-size: 14px;
-                text-align: left;
-                padding: 12px 18px;
-                border: none;
-                border-left: 4px solid transparent;
-                font-weight: 500;
-            }
-            QPushButton.navButton:hover {
-                background-color: #334155;
-                color: #ffffff;
-            }
-            QPushButton.navButton:checked {
-                background-color: #334155;
-                color: #38bdf8;
-                border-left: 4px solid #38bdf8;
-                font-weight: bold;
-            }
-            QFrame#statusFrame {
-                background-color: #0f172a;
-                border: 1px solid #334155;
-                border-radius: 6px;
-                margin: 10px;
-                padding: 10px;
-            }
-            QLabel#statusHeading {
-                color: #94a3b8;
-                font-size: 11px;
-                text-transform: uppercase;
-                font-weight: bold;
-            }
-            QLabel#statusValue {
-                color: #38bdf8;
-                font-size: 13px;
-                font-weight: bold;
-            }
-            """
-        )
+        sidebar.setStyleSheet(get_sidebar_stylesheet())
 
         layout = QVBoxLayout(sidebar)
         layout.setContentsMargins(0, 0, 0, 0)

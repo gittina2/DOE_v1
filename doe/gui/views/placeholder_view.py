@@ -1,10 +1,16 @@
-﻿"""Placeholder view for upcoming workflow sections."""
+"""Placeholder view for upcoming workflow sections."""
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QLabel,
     QFrame,
+)
+
+from doe.gui.styles import (
+    get_placeholder_card_style,
+    get_placeholder_badge_style,
+    colors,
 )
 
 
@@ -29,17 +35,7 @@ class PlaceholderView(QWidget):
 
         card = QFrame(self)
         card.setFrameShape(QFrame.StyledPanel)
-        card.setStyleSheet(
-            """
-            QFrame {
-                background-color: #ffffff;
-                border: 1px solid #e0e0e0;
-                border-radius: 8px;
-                padding: 30px;
-                max-width: 600px;
-            }
-            """
-        )
+        card.setStyleSheet(get_placeholder_card_style())
 
         card_layout = QVBoxLayout(card)
         card_layout.setSpacing(14)
@@ -48,36 +44,27 @@ class PlaceholderView(QWidget):
         # Header badge
         badge = QLabel("UNDER DEVELOPMENT", card)
         badge.setAlignment(Qt.AlignCenter)
-        badge.setStyleSheet(
-            """
-            background-color: #e3f2fd;
-            color: #0d47a1;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 4px 12px;
-            border-radius: 4px;
-            """
-        )
+        badge.setStyleSheet(get_placeholder_badge_style())
         card_layout.addWidget(badge, alignment=Qt.AlignCenter)
 
         # Section Title
         title_label = QLabel(title, card)
         title_label.setAlignment(Qt.AlignCenter)
-        title_label.setStyleSheet("font-size: 22px; font-weight: bold; color: #1a1a1a;")
+        title_label.setStyleSheet(f"font-size: 22px; font-weight: bold; color: {colors.HEADER_TEXT};")
         card_layout.addWidget(title_label)
 
         # Description
         desc_label = QLabel(description, card)
         desc_label.setAlignment(Qt.AlignCenter)
         desc_label.setWordWrap(True)
-        desc_label.setStyleSheet("font-size: 14px; color: #555555; line-height: 1.4;")
+        desc_label.setStyleSheet(f"font-size: 14px; color: {colors.SECONDARY_TEXT}; line-height: 1.4;")
         card_layout.addWidget(desc_label)
 
         if upcoming:
             note_label = QLabel(upcoming, card)
             note_label.setAlignment(Qt.AlignCenter)
             note_label.setWordWrap(True)
-            note_label.setStyleSheet("font-size: 12px; color: #777777; font-style: italic;")
+            note_label.setStyleSheet(f"font-size: 12px; color: {colors.SUBTLE_TEXT}; font-style: italic;")
             card_layout.addWidget(note_label)
 
         layout.addWidget(card, alignment=Qt.AlignCenter)

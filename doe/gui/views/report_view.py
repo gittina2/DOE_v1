@@ -24,6 +24,14 @@ from PySide6.QtWidgets import (
 from doe.gui.session import GuiSession
 from doe.report_generation import format_markdown_report, generate_report
 from doe.models import DoeError, DomainValidationError
+from doe.gui.styles import (
+    get_header_style,
+    get_status_frame_style,
+    get_primary_button_style,
+    get_rendered_browser_style,
+    get_raw_editor_style,
+    colors,
+)
 
 
 class ReportView(QWidget):
@@ -55,27 +63,19 @@ class ReportView(QWidget):
 
         # -- Section Header --
         header = QLabel("Experiment Report & Export", content)
-        header.setStyleSheet("font-size: 20px; font-weight: bold; color: #1a1a1a;")
+        header.setStyleSheet(get_header_style())
         self._content_layout.addWidget(header)
 
         # -- Overview & Status Banner --
         self.overview_frame = QFrame(content)
-        self.overview_frame.setStyleSheet(
-            """
-            QFrame {
-                background-color: #f8fafc;
-                border: 1px solid #cbd5e1;
-                border-radius: 6px;
-                padding: 10px;
-            }
-            """
-        )
+        self.overview_frame.setObjectName("reportOverviewFrame")
+        self.overview_frame.setStyleSheet(get_status_frame_style())
         overview_layout = QHBoxLayout(self.overview_frame)
         overview_layout.setContentsMargins(8, 8, 8, 8)
 
         self.overview_label = QLabel(self.overview_frame)
         self.overview_label.setTextFormat(Qt.RichText)
-        self.overview_label.setStyleSheet("font-size: 13px; color: #1e293b;")
+        self.overview_label.setStyleSheet(f"font-size: 13px; color: {colors.OVERVIEW_TEXT};")
         overview_layout.addWidget(self.overview_label, 1)
 
         self.section_badges_label = QLabel(self.overview_frame)
@@ -98,20 +98,7 @@ class ReportView(QWidget):
         toolbar_layout.addWidget(self.format_combo)
 
         self.export_btn = QPushButton("Export Report to File...", toolbar_group)
-        self.export_btn.setStyleSheet(
-            """
-            QPushButton {
-                background-color: #2563eb;
-                color: white;
-                font-weight: bold;
-                padding: 6px 18px;
-                border-radius: 4px;
-            }
-            QPushButton:hover {
-                background-color: #1d4ed8;
-            }
-            """
-        )
+        self.export_btn.setStyleSheet(get_primary_button_style(padding="6px 18px", border_radius="4px", border_none=False))
         self.export_btn.clicked.connect(self._on_export_report)
         toolbar_layout.addWidget(self.export_btn)
 
@@ -134,39 +121,18 @@ class ReportView(QWidget):
 
         # Tab 1: Rendered Markdown Browser
         self.rendered_browser = QTextBrowser(self.tabs)
+        self.rendered_browser.setObjectName("renderedReportBrowser")
         self.rendered_browser.setOpenExternalLinks(True)
         self.rendered_browser.setMinimumHeight(450)
-        self.rendered_browser.setStyleSheet(
-            """
-            QTextBrowser {
-                background-color: #ffffff;
-                border: 1px solid #cbd5e1;
-                border-radius: 4px;
-                padding: 16px;
-                font-size: 13px;
-                line-height: 1.5;
-            }
-            """
-        )
+        self.rendered_browser.setStyleSheet(get_rendered_browser_style(padding="16px", border_radius="4px"))
         self.tabs.addTab(self.rendered_browser, "Formatted Document Preview")
 
         # Tab 2: Raw Markdown Source
         self.raw_text_edit = QTextEdit(self.tabs)
+        self.raw_text_edit.setObjectName("rawReportEditor")
         self.raw_text_edit.setReadOnly(True)
         self.raw_text_edit.setMinimumHeight(450)
-        self.raw_text_edit.setStyleSheet(
-            """
-            QTextEdit {
-                font-family: Consolas, monospace;
-                font-size: 12px;
-                background-color: #0f172a;
-                color: #f8fafc;
-                padding: 12px;
-                border: 1px solid #334155;
-                border-radius: 4px;
-            }
-            """
-        )
+        self.raw_text_edit.setStyleSheet(get_raw_editor_style(padding="12px", border_radius="4px"))
         self.tabs.addTab(self.raw_text_edit, "Raw Markdown Syntax")
 
         preview_layout.addWidget(self.tabs)
@@ -196,7 +162,7 @@ class ReportView(QWidget):
             self.export_btn.setEnabled(False)
             self.copy_btn.setEnabled(False)
             self.rendered_browser.setHtml(
-                "<p style='color: #64748b; font-style: italic;'>"
+                f"<p style='color: {colors.HELP_TEXT}; font-style: italic;'>"
                 "Report preview will be generated automatically once an experiment is created."
                 "</p>"
             )
@@ -219,9 +185,9 @@ class ReportView(QWidget):
         has_ana = state.analysis is not None
 
         def _badge(title: str, present: bool) -> str:
-            color = "#16a34a" if present else "#94a3b8"
+            color = colors.BADGE_COMPLETE_BG if present else colors.BADGE_INACTIVE_BG
             icon = "✓" if present else "–"
-            return f"<span style='background-color: {color}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 4px;'>{title} {icon}</span>"
+            return f"<span style='background-color: {color}; color: {colors.BADGE_TEXT}; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 4px;'>{title} {icon}</span>"
 
         badges_html = (
             _badge("Design", has_des)
@@ -236,7 +202,7 @@ class ReportView(QWidget):
             self.rendered_browser.setMarkdown(self._current_report_text)
             self.raw_text_edit.setPlainText(self._current_report_text)
         except Exception as e:
-            self.rendered_browser.setHtml(f"<p style='color: #dc2626;'>Error rendering report: {str(e)}</p>")
+            self.rendered_browser.setHtml(f"<p style='color: {colors.ERROR_TEXT};'>Error rendering report: {str(e)}</p>")
             self.raw_text_edit.setPlainText(f"Error: {str(e)}")
 
     # ------------------------------------------------------------------ #

@@ -1,0 +1,141 @@
+/* ==========================================================================
+   DOE Toolkit - Shared Qt Stylesheet
+   Color tokens are dynamically populated from colors.py
+   ========================================================================== */
+
+/* --- Sidebar --- */
+QWidget#sidebar {
+    background-color: @SIDEBAR_BG@;
+    border-right: 1px solid @SIDEBAR_BORDER@;
+}
+
+QLabel#appTitle {
+    color: @SIDEBAR_TITLE@;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 16px 12px 6px 12px;
+}
+
+QLabel#appSubtitle {
+    color: @SIDEBAR_SUBTITLE@;
+    font-size: 11px;
+    padding: 0 12px 16px 12px;
+}
+
+QPushButton.navButton {
+    background-color: transparent;
+    color: @SIDEBAR_NAV_TEXT@;
+    font-size: 14px;
+    text-align: left;
+    padding: 12px 18px;
+    border: none;
+    border-left: 4px solid transparent;
+    font-weight: 500;
+}
+
+QPushButton.navButton:hover {
+    background-color: @SIDEBAR_NAV_HOVER_BG@;
+    color: @SIDEBAR_NAV_HOVER_TEXT@;
+}
+
+QPushButton.navButton:checked {
+    background-color: @SIDEBAR_NAV_CHECKED_BG@;
+    color: @SIDEBAR_NAV_CHECKED_TEXT@;
+    border-left: 4px solid @SIDEBAR_NAV_CHECKED_BORDER@;
+    font-weight: bold;
+}
+
+QFrame#statusFrame {
+    background-color: @SIDEBAR_STATUS_BG@;
+    border: 1px solid @SIDEBAR_STATUS_BORDER@;
+    border-radius: 6px;
+    margin: 10px;
+    padding: 10px;
+}
+
+QLabel#statusHeading {
+    color: @SIDEBAR_STATUS_HEADING@;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+QLabel#statusValue {
+    color: @SIDEBAR_STATUS_VALUE@;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* --- Section Headers --- */
+QLabel.sectionHeader {
+    font-size: 20px;
+    font-weight: bold;
+    color: @HEADER_TEXT@;
+}
+
+/* --- Cards & Overview Containers --- */
+QFrame#contextFrame {
+    background-color: @CONTEXT_FRAME_BG@;
+    border: 1px solid @CONTEXT_FRAME_BORDER@;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+QFrame#calcFrame {
+    background-color: @CALC_FRAME_BG@;
+    border: 1px solid @CALC_FRAME_BORDER@;
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+QFrame#resultsStatusFrame {
+    background-color: @CARD_BG@;
+    border: 1px solid @CARD_BORDER@;
+    border-radius: 6px;
+    padding: 10px 14px;
+}
+
+QFrame#formulaFrame {
+    background-color: @FORMULA_FRAME_BG@;
+    border: 1px solid @FORMULA_FRAME_BORDER@;
+    border-radius: 6px;
+    padding: 10px 14px;
+}
+
+QFrame#summaryCard {
+    background-color: @CARD_BG@;
+    border: 1px solid @CARD_BORDER@;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+QFrame#reportOverviewFrame {
+    background-color: @CARD_BG@;
+    border: 1px solid @CARD_BORDER@;
+    border-radius: 6px;
+    padding: 10px 14px;
+}
+
+QFrame#cardFrame {
+    background-color: @PLACEHOLDER_CARD_BG@;
+    border-radius: 8px;
+    border: 1px solid @PLACEHOLDER_CARD_BORDER@;
+}
+
+/* --- Editors and Previews --- */
+QTextBrowser#renderedReportBrowser {
+    background-color: @BROWSER_BG@;
+    border: 1px solid @BROWSER_BORDER@;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+QPlainTextEdit#rawReportEditor {
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    background-color: @EDITOR_BG@;
+    color: @EDITOR_FG@;
+    border-radius: 6px;
+    border: 1px solid @EDITOR_BORDER@;
+    padding: 8px;
+}

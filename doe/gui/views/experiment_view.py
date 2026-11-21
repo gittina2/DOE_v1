@@ -26,6 +26,7 @@ from doe.gui.dialogs.factor_dialog import FactorDialog
 from doe.gui.dialogs.response_dialog import ResponseDialog
 from doe.models import Factor, Response, DomainValidationError, DoeError
 from doe.experiment_creation import create_experiment
+from doe.gui.styles import get_header_style, get_primary_button_style, colors
 
 
 class ExperimentView(QWidget):
@@ -65,7 +66,7 @@ class ExperimentView(QWidget):
 
         # -- Section Header --
         header = QLabel("Experiment Definition", content)
-        header.setStyleSheet("font-size: 20px; font-weight: bold; color: #1a1a1a;")
+        header.setStyleSheet(get_header_style())
         self._content_layout.addWidget(header)
 
         # -- Name & Description --
@@ -175,23 +176,7 @@ class ExperimentView(QWidget):
         self.create_btn.setMinimumHeight(38)
         self.create_btn.setMinimumWidth(200)
         self.create_btn.setStyleSheet(
-            """
-            QPushButton {
-                background-color: #2563eb;
-                color: white;
-                font-size: 14px;
-                font-weight: bold;
-                border: none;
-                border-radius: 6px;
-                padding: 8px 24px;
-            }
-            QPushButton:hover {
-                background-color: #1d4ed8;
-            }
-            QPushButton:pressed {
-                background-color: #1e40af;
-            }
-            """
+            get_primary_button_style(font_size="14px", padding="8px 24px", border_radius="6px")
         )
         self.create_btn.clicked.connect(self._on_create_experiment)
         create_btn_layout.addWidget(self.create_btn)
@@ -205,7 +190,7 @@ class ExperimentView(QWidget):
         self.summary_label = QLabel(self.summary_group)
         self.summary_label.setWordWrap(True)
         self.summary_label.setTextFormat(Qt.RichText)
-        self.summary_label.setStyleSheet("font-size: 13px; line-height: 1.5; color: #333333;")
+        self.summary_label.setStyleSheet(f"font-size: 13px; line-height: 1.5; color: {colors.BODY_TEXT};")
         summary_layout.addWidget(self.summary_label)
         self._content_layout.addWidget(self.summary_group)
 

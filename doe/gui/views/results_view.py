@@ -23,6 +23,13 @@ from doe.gui.session import GuiSession
 from doe.imports.csv_result_importer import import_results_from_csv
 from doe.result_input import insert_results, export_results_template_csv
 from doe.models import ResultEntry, DoeError, DomainValidationError
+from doe.gui.styles import (
+    get_header_style,
+    get_status_frame_style,
+    get_success_button_style,
+    get_badge_style,
+    colors,
+)
 
 
 class ResultsView(QWidget):
@@ -54,41 +61,22 @@ class ResultsView(QWidget):
 
         # -- Section Header --
         header = QLabel("Experimental Results & Measurements", content)
-        header.setStyleSheet("font-size: 20px; font-weight: bold; color: #1a1a1a;")
+        header.setStyleSheet(get_header_style())
         self._content_layout.addWidget(header)
 
         # -- Status & Completeness Header Banner --
         self.status_frame = QFrame(content)
-        self.status_frame.setStyleSheet(
-            """
-            QFrame {
-                background-color: #f8fafc;
-                border: 1px solid #cbd5e1;
-                border-radius: 6px;
-                padding: 10px;
-            }
-            """
-        )
+        self.status_frame.setObjectName("statusFrame")
+        self.status_frame.setStyleSheet(get_status_frame_style())
         status_layout = QHBoxLayout(self.status_frame)
         status_layout.setContentsMargins(8, 8, 8, 8)
 
         self.status_badge = QLabel("No Results", self.status_frame)
-        self.status_badge.setStyleSheet(
-            """
-            QLabel {
-                background-color: #64748b;
-                color: white;
-                font-size: 12px;
-                font-weight: bold;
-                border-radius: 4px;
-                padding: 4px 10px;
-            }
-            """
-        )
+        self.status_badge.setStyleSheet(get_badge_style(colors.BADGE_PENDING_BG, bold=True))
         status_layout.addWidget(self.status_badge)
 
         self.status_text_label = QLabel(self.status_frame)
-        self.status_text_label.setStyleSheet("font-size: 13px; color: #334155;")
+        self.status_text_label.setStyleSheet(f"font-size: 13px; color: {colors.STATUS_TEXT};")
         status_layout.addWidget(self.status_text_label, 1)
 
         self._content_layout.addWidget(self.status_frame)
@@ -107,20 +95,7 @@ class ResultsView(QWidget):
         toolbar_layout.addWidget(self.import_csv_btn)
 
         self.save_btn = QPushButton("Save / Apply Results", toolbar_group)
-        self.save_btn.setStyleSheet(
-            """
-            QPushButton {
-                background-color: #16a34a;
-                color: white;
-                font-weight: bold;
-                padding: 6px 16px;
-                border-radius: 4px;
-            }
-            QPushButton:hover {
-                background-color: #15803d;
-            }
-            """
-        )
+        self.save_btn.setStyleSheet(get_success_button_style(padding="6px 16px", border_radius="4px"))
         self.save_btn.clicked.connect(self._on_save_results)
         toolbar_layout.addWidget(self.save_btn)
 
@@ -140,7 +115,7 @@ class ResultsView(QWidget):
             "Leave blank if pending.",
             self.table_group,
         )
-        table_help.setStyleSheet("color: #64748b; font-size: 12px; margin-bottom: 4px;")
+        table_help.setStyleSheet(f"color: {colors.HELP_TEXT}; font-size: 12px; margin-bottom: 4px;")
         table_layout.addWidget(table_help)
 
         self.results_table = QTableWidget(0, 0, self.table_group)
@@ -150,7 +125,7 @@ class ResultsView(QWidget):
         table_layout.addWidget(self.results_table)
 
         self.validation_label = QLabel(self.table_group)
-        self.validation_label.setStyleSheet("color: #dc2626; font-size: 12px; font-weight: 500;")
+        self.validation_label.setStyleSheet(f"color: {colors.ERROR_TEXT}; font-size: 12px; font-weight: 500;")
         table_layout.addWidget(self.validation_label)
 
         self._content_layout.addWidget(self.table_group)
@@ -177,7 +152,7 @@ class ResultsView(QWidget):
 
         if design is None or exp is None:
             self.status_badge.setText("No Design")
-            self.status_badge.setStyleSheet("background-color: #94a3b8; color: white; padding: 4px 10px; border-radius: 4px;")
+            self.status_badge.setStyleSheet(get_badge_style(colors.BADGE_INACTIVE_BG, bold=False))
             self.status_text_label.setText("<b>No Design Available:</b> Please generate a design in the <i>Design</i> section first.")
             self.export_template_btn.setEnabled(False)
             self.import_csv_btn.setEnabled(False)
@@ -218,13 +193,13 @@ class ResultsView(QWidget):
                 # 1. Run Number (Read-only)
                 run_num_item = QTableWidgetItem(str(run.run_number or row_idx + 1))
                 run_num_item.setFlags(run_num_item.flags() & ~Qt.ItemIsEditable)
-                run_num_item.setBackground(Qt.lightGray)
+                run_num_item.setBackground(colors.TABLE_READONLY_BG)
                 self.results_table.setItem(row_idx, 0, run_num_item)
 
                 # 2. Run ID (Read-only)
                 run_id_item = QTableWidgetItem(str(run.run_id))
                 run_id_item.setFlags(run_id_item.flags() & ~Qt.ItemIsEditable)
-                run_id_item.setBackground(Qt.lightGray)
+                run_id_item.setBackground(colors.TABLE_READONLY_BG)
                 self.results_table.setItem(row_idx, 1, run_id_item)
 
                 # 3. Factor values (Read-only)
@@ -232,7 +207,7 @@ class ResultsView(QWidget):
                     f_val = run.factor_values.get(fname, "")
                     f_item = QTableWidgetItem(str(f_val))
                     f_item.setFlags(f_item.flags() & ~Qt.ItemIsEditable)
-                    f_item.setBackground(Qt.lightGray)
+                    f_item.setBackground(colors.TABLE_READONLY_BG)
                     f_item.setTextAlignment(Qt.AlignCenter)
                     self.results_table.setItem(row_idx, f_idx, f_item)
 
@@ -257,9 +232,9 @@ class ResultsView(QWidget):
                 status_item.setFlags(status_item.flags() & ~Qt.ItemIsEditable)
                 status_item.setTextAlignment(Qt.AlignCenter)
                 if status_text == "Complete":
-                    status_item.setForeground(Qt.darkGreen)
+                    status_item.setForeground(colors.TABLE_STATUS_COMPLETE_FG)
                 else:
-                    status_item.setForeground(Qt.darkRed)
+                    status_item.setForeground(colors.TABLE_STATUS_PENDING_FG)
                 self.results_table.setItem(row_idx, status_col_idx, status_item)
 
         finally:
@@ -289,18 +264,14 @@ class ResultsView(QWidget):
 
         if is_complete:
             self.status_badge.setText("Results Complete")
-            self.status_badge.setStyleSheet(
-                "background-color: #16a34a; color: white; font-weight: bold; border-radius: 4px; padding: 4px 10px;"
-            )
+            self.status_badge.setStyleSheet(get_badge_style(colors.BADGE_COMPLETE_BG, bold=True))
             self.status_text_label.setText(
                 f"<b>All {total_runs} experimental runs completed.</b> "
                 f"Ready for statistical regression modeling in the <i>Analysis</i> section."
             )
         elif recorded_runs > 0 or recorded_measurements > 0:
             self.status_badge.setText("In Progress (Partial)")
-            self.status_badge.setStyleSheet(
-                "background-color: #d97706; color: white; font-weight: bold; border-radius: 4px; padding: 4px 10px;"
-            )
+            self.status_badge.setStyleSheet(get_badge_style(colors.BADGE_IN_PROGRESS_BG, bold=True))
             missing = total_expected_measurements - recorded_measurements
             self.status_text_label.setText(
                 f"<b>{recorded_runs} of {total_runs} runs complete.</b> "
@@ -309,9 +280,7 @@ class ResultsView(QWidget):
             )
         else:
             self.status_badge.setText("No Measurements")
-            self.status_badge.setStyleSheet(
-                "background-color: #64748b; color: white; font-weight: bold; border-radius: 4px; padding: 4px 10px;"
-            )
+            self.status_badge.setStyleSheet(get_badge_style(colors.BADGE_PENDING_BG, bold=True))
             self.status_text_label.setText(
                 f"<b>0 of {total_runs} runs recorded.</b> "
                 f"Please input measured response values or import them from a CSV file."

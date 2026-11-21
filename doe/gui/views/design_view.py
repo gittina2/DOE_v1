@@ -27,6 +27,13 @@ from doe.gui.session import GuiSession
 from doe.design_generation import generate_design
 from doe.designs.utils import export_design_to_csv, export_design_to_excel
 from doe.models import DoeError, DomainValidationError, Design
+from doe.gui.styles import (
+    get_header_style,
+    get_context_frame_style,
+    get_calc_frame_style,
+    get_primary_button_style,
+    colors,
+)
 
 
 class DesignView(QWidget):
@@ -62,25 +69,18 @@ class DesignView(QWidget):
 
         # -- Section Header --
         header = QLabel("Experimental Design", content)
-        header.setStyleSheet("font-size: 20px; font-weight: bold; color: #1a1a1a;")
+        header.setStyleSheet(get_header_style())
         self._content_layout.addWidget(header)
 
         # -- Experiment Context Banner --
         self.context_frame = QFrame(content)
-        self.context_frame.setStyleSheet(
-            """
-            QFrame {
-                background-color: #f1f5f9;
-                border: 1px solid #cbd5e1;
-                border-radius: 6px;
-                padding: 10px;
-            }
-            """
-        )
+        self.context_frame.setObjectName("contextFrame")
+        self.context_frame.setStyleSheet(get_context_frame_style())
         context_layout = QVBoxLayout(self.context_frame)
         context_layout.setContentsMargins(8, 8, 8, 8)
         self.context_label = QLabel(self.context_frame)
         self.context_label.setTextFormat(Qt.RichText)
+        self.context_label.setStyleSheet(f"font-size: 13px; color: {colors.OVERVIEW_TEXT};")
         context_layout.addWidget(self.context_label)
         self._content_layout.addWidget(self.context_frame)
 
@@ -104,20 +104,12 @@ class DesignView(QWidget):
 
         # Run count calculator preview banner
         self.run_calc_frame = QFrame(self.config_group)
-        self.run_calc_frame.setStyleSheet(
-            """
-            QFrame {
-                background-color: #eff6ff;
-                border: 1px solid #bfdbfe;
-                border-radius: 6px;
-                padding: 8px 12px;
-            }
-            """
-        )
+        self.run_calc_frame.setObjectName("calcFrame")
+        self.run_calc_frame.setStyleSheet(get_calc_frame_style())
         calc_layout = QHBoxLayout(self.run_calc_frame)
         calc_layout.setContentsMargins(4, 4, 4, 4)
         self.run_calc_label = QLabel(self.run_calc_frame)
-        self.run_calc_label.setStyleSheet("color: #1e40af; font-size: 13px;")
+        self.run_calc_label.setStyleSheet(f"color: {colors.CALC_FRAME_TEXT}; font-size: 13px;")
         calc_layout.addWidget(self.run_calc_label)
         config_layout.addWidget(self.run_calc_frame)
 
@@ -153,27 +145,12 @@ class DesignView(QWidget):
         self.generate_btn.setMinimumHeight(38)
         self.generate_btn.setMinimumWidth(200)
         self.generate_btn.setStyleSheet(
-            """
-            QPushButton {
-                background-color: #2563eb;
-                color: white;
-                font-size: 14px;
-                font-weight: bold;
-                border: none;
-                border-radius: 6px;
-                padding: 8px 24px;
-            }
-            QPushButton:hover {
-                background-color: #1d4ed8;
-            }
-            QPushButton:pressed {
-                background-color: #1e40af;
-            }
-            QPushButton:disabled {
-                background-color: #94a3b8;
-                color: #e2e8f0;
-            }
-            """
+            get_primary_button_style(
+                font_size="14px",
+                padding="8px 24px",
+                border_radius="6px",
+                include_disabled=True,
+            )
         )
         self.generate_btn.clicked.connect(self._on_generate_design)
         gen_btn_layout.addWidget(self.generate_btn)

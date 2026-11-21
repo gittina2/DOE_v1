@@ -1,4 +1,4 @@
-﻿"""Application entry point and Qt application lifecycle."""
+"""Application entry point and Qt application lifecycle."""
 import sys
 from typing import Optional, List
 
@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QApplication
 
 from doe.gui.main_window import MainWindow
 from doe.gui.session import GuiSession
+from doe.gui.styles import get_application_stylesheet
 
 
 def create_application(argv: Optional[List[str]] = None) -> QApplication:
@@ -15,6 +16,8 @@ def create_application(argv: Optional[List[str]] = None) -> QApplication:
         app = QApplication(argv if argv is not None else sys.argv)
         app.setApplicationName("DOE Toolkit")
         app.setOrganizationName("DOE Toolkit")
+    if not app.styleSheet():
+        app.setStyleSheet(get_application_stylesheet())
     return app
 
 
